@@ -7,13 +7,20 @@ export class PortfolioService {
     href,
     img,
     title,
-  }: Portfolio): Promise<Portfolio> {
+  }: Omit<Portfolio, "id">): Promise<Portfolio> {
     return prisma.portfolio.create({
       data: {
         content,
         href,
         img,
         title,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        href: true,
+        img: true,
       },
     });
   }

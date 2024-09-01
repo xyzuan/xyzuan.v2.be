@@ -1,9 +1,11 @@
 import { Elysia } from "elysia";
+import swagger from "@elysiajs/swagger";
+
 import apiRoutes from "./api";
 
 const api = new Elysia();
+api.use(swagger());
 api.use(apiRoutes);
-api.get("/", () => "Welcome to Elysia!");
 api.listen(process.env.PORT || 3031);
 
 console.log(
