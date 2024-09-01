@@ -1,15 +1,18 @@
 {
-  "name": "elysia-prisma",
+  "name": "xyzuan-be-elysia",
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/swagger": "^1.1.1",
+    "@prisma/client": "5.19.0",
     "elysia": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "prisma": "^5.19.0"
   },
   "module": "src/index.js"
 }

@@ -1,7 +1,11 @@
 import { Elysia } from "elysia";
+import apiRoutes from "./api";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const api = new Elysia();
+api.use(apiRoutes);
+api.get("/", () => "Welcome to Elysia!");
+api.listen(process.env.PORT || 3031);
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at ${api.server?.hostname}:${api.server?.port}`
 );
