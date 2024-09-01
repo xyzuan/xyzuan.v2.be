@@ -16,24 +16,27 @@ export const PortfolioController = createElysia()
     }),
   })
   .get("/", async () => {
-    const portfolios = await portfolioService.getAllPortfolios();
-    return portfolios;
+    return {
+      status: 200,
+      data: await portfolioService.getAllPortfolios(),
+    };
   })
   .get("/:id", async ({ params: { id } }) => {
-    const portfolios = await portfolioService.getPortfolioById(parseInt(id));
-    return portfolios;
+    return {
+      status: 200,
+      data: await portfolioService.getPortfolioById(parseInt(id)),
+    };
   })
   .post(
     "/",
     async ({ body }: { body: Omit<Portfolio, "id"> }) => {
       const { content, img, href, title } = body;
-      const createPortfolio = await portfolioService.createPortfolio({
+      return await portfolioService.createPortfolio({
         content,
         img,
         href,
         title,
       });
-      return createPortfolio;
     },
     {
       body: "portfolio.model",
@@ -47,8 +50,7 @@ export const PortfolioController = createElysia()
     }
   )
   .delete("/:id", async ({ params: { id } }) => {
-    const portfolios = await portfolioService.deletePortfolio(parseInt(id));
-    return portfolios;
+    return await portfolioService.deletePortfolio(parseInt(id));
   })
   .patch(
     "/:id",
