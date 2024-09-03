@@ -14,32 +14,40 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  username  String  @unique
-  password  String
+  id              Int                                  @id @default(autoincrement())
+  username        String                               @unique
+  password        String
 }
 
 model Portfolio {
-  id        Int     @id @default(autoincrement())
-  img       String
-  title     String
-  content   String  @db.Text
-  href      String
+  id              Int                                  @id @default(autoincrement())
+  img             String
+  title           String
+  content         String                               @db.Text
+  href            String
 }
 
 model Education {
-  id        Int     @id @default(autoincrement())
-  instance  String
-  address   String
-  date      String
+  id              Int                                  @id @default(autoincrement())
+  instance        String
+  address         String
+  date            String
 }
 
 model Work {
-  id            Int     @id @default(autoincrement())
-  logo          String
-  jobTitle      String
-  instance      String
-  instanceLink  String
-  address       String
-  date          String
+  id              Int                                 @id @default(autoincrement())
+  logo            String
+  jobTitle        String
+  instance        String
+  instanceLink    String
+  address         String
+  date            String
+  responsibilities WorkResponsibility[]
+}
+
+model WorkResponsibility {
+  id              Int                                 @id @default(autoincrement())
+  description     String
+  workId          Int
+  work            Work                                @relation(fields: [workId], references: [id], onDelete: Cascade)
 }

@@ -3,7 +3,7 @@ import swagger from "@elysiajs/swagger";
 
 import apiRoutes from "./api";
 
-const api = new Elysia();
+const api = new Elysia({ prefix: "/v2" });
 api.use(swagger());
 api.use(apiRoutes);
 api.listen(process.env.PORT || 3031);
