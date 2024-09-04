@@ -12,6 +12,7 @@ export class PortfolioService {
     img,
     title,
     stacks,
+    isFeatured,
   }: Omit<PortfolioWithStackSchema, "id">): Promise<Portfolio> {
     return prisma.portfolio.create({
       data: {
@@ -19,6 +20,7 @@ export class PortfolioService {
         href,
         img,
         title,
+        isFeatured,
         stacks: {
           create: stacks.map((description: string) => ({
             description,
@@ -31,6 +33,7 @@ export class PortfolioService {
         content: true,
         href: true,
         img: true,
+        isFeatured: true,
         stacks: {
           select: {
             id: true,
@@ -55,6 +58,11 @@ export class PortfolioService {
       include: {
         stacks: true,
       },
+      orderBy: [
+        {
+          isFeatured: "desc",
+        },
+      ],
     });
   }
 
