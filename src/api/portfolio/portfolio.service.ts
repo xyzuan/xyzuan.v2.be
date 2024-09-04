@@ -1,5 +1,9 @@
 import { Portfolio } from "@prisma/client";
 import { prisma } from "@utils/prismaDatabase";
+import {
+  PortfolioWithStackSchema,
+  UpdatePortfolioData,
+} from "./portfolio.schema";
 
 export class PortfolioService {
   async createPortfolio({
@@ -7,13 +11,19 @@ export class PortfolioService {
     href,
     img,
     title,
-  }: Omit<Portfolio, "id">): Promise<Portfolio> {
+    stacks,
+  }: Omit<PortfolioWithStackSchema, "id">): Promise<Portfolio> {
     return prisma.portfolio.create({
       data: {
         content,
         href,
         img,
         title,
+        stacks: {
+          create: stacks.map((description: string) => ({
+            description,
+          })),
+        },
       },
       select: {
         id: true,
@@ -21,6 +31,12 @@ export class PortfolioService {
         content: true,
         href: true,
         img: true,
+        stacks: {
+          select: {
+            id: true,
+            description: true,
+          },
+        },
       },
     });
   }
@@ -28,20 +44,40 @@ export class PortfolioService {
   async getPortfolioById(id: number): Promise<Portfolio | null> {
     return prisma.portfolio.findUnique({
       where: { id },
+      include: {
+        stacks: true,
+      },
     });
   }
 
   async getAllPortfolios(): Promise<Portfolio[]> {
-    return prisma.portfolio.findMany();
+    return prisma.portfolio.findMany({
+      include: {
+        stacks: true,
+      },
+    });
   }
 
   async updatePortfolio(
     id: number,
-    data: Partial<Omit<Portfolio, "id">>
+    data: UpdatePortfolioData
   ): Promise<Portfolio> {
+    let updatedData: any = { ...data };
+    if (data.stacks) {
+      updatedData.stacks = {
+        deleteMany: {},
+        create: data.stacks.map((description) => ({
+          description,
+        })),
+      };
+    }
+
     return prisma.portfolio.update({
       where: { id },
-      data,
+      data: { ...updatedData },
+      include: {
+        stacks: true,
+      },
     });
   }
 

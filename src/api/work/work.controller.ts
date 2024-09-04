@@ -2,7 +2,7 @@ import { t } from "elysia";
 
 import { createElysia } from "@utils/createElysia";
 import { WorkService } from "./work.service";
-import { WorkWithResponsibilitySchema } from "./work.schema";
+import { UpdateWorkData, WorkWithResponsibilitySchema } from "./work.schema";
 
 const workService = new WorkService();
 
@@ -33,23 +33,8 @@ export const WorkController = createElysia()
   .post(
     "/",
     async ({ body }: { body: Omit<WorkWithResponsibilitySchema, "id"> }) => {
-      const {
-        logo,
-        jobTitle,
-        responsibilities,
-        address,
-        instance,
-        instanceLink,
-        date,
-      } = body;
       return await workService.createWork({
-        logo,
-        jobTitle,
-        responsibilities,
-        address,
-        instance,
-        instanceLink,
-        date,
+        ...body,
       });
     },
     {
@@ -79,28 +64,14 @@ export const WorkController = createElysia()
       body,
     }: {
       params: { id: string };
-      body: WorkWithResponsibilitySchema;
+      body: UpdateWorkData;
     }) => {
-      const {
-        logo,
-        jobTitle,
-        responsibilities,
-        address,
-        instance,
-        instanceLink,
-        date,
-      } = body;
-
-      const updatedWork = await workService.updateWork(parseInt(id), {
-        logo,
-        jobTitle,
-        responsibilities,
-        address,
-        instance,
-        instanceLink,
-        date,
+      await workService.updateWork(parseInt(id), {
+        ...body,
       });
-
-      return updatedWork;
+      return {
+        status: 200,
+        message: "Work and related responsibilities updated successfully",
+      };
     }
   );

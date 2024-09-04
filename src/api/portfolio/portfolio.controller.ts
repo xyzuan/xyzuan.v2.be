@@ -2,7 +2,7 @@ import { t } from "elysia";
 
 import { createElysia } from "@utils/createElysia";
 import { PortfolioService } from "./portfolio.service";
-import { Portfolio } from "@prisma/client";
+import { PortfolioWithStackSchema } from "./portfolio.schema";
 
 const portfolioService = new PortfolioService();
 
@@ -13,6 +13,7 @@ export const PortfolioController = createElysia()
       img: t.String(),
       href: t.String(),
       title: t.String(),
+      stacks: t.Array(t.String()),
     }),
   })
   .get("/", async () => {
@@ -29,13 +30,9 @@ export const PortfolioController = createElysia()
   })
   .post(
     "/",
-    async ({ body }: { body: Omit<Portfolio, "id"> }) => {
-      const { content, img, href, title } = body;
+    async ({ body }: { body: Omit<PortfolioWithStackSchema, "id"> }) => {
       return await portfolioService.createPortfolio({
-        content,
-        img,
-        href,
-        title,
+        ...body,
       });
     },
     {
@@ -50,7 +47,11 @@ export const PortfolioController = createElysia()
     }
   )
   .delete("/:id", async ({ params: { id } }) => {
-    return await portfolioService.deletePortfolio(parseInt(id));
+    await portfolioService.deletePortfolio(parseInt(id));
+    return {
+      status: 200,
+      message: "Portfolio and related stacks deleted successfully",
+    };
   })
   .patch(
     "/:id",
@@ -59,25 +60,12 @@ export const PortfolioController = createElysia()
       body,
     }: {
       params: { id: string };
-      body: Omit<Portfolio, "id">;
+      body: PortfolioWithStackSchema;
     }) => {
-      const { content, img, href, title } = body;
-      const portfolios = await portfolioService.updatePortfolio(parseInt(id), {
-        content,
-        img,
-        href,
-        title,
-      });
-      return portfolios;
-    },
-    {
-      body: "portfolio.model",
-      response: t.Object({
-        id: t.Number(),
-        title: t.String(),
-        content: t.String(),
-        href: t.String(),
-        img: t.String(),
-      }),
+      await portfolioService.updatePortfolio(parseInt(id), { ...body });
+      return {
+        status: 200,
+        message: `Portfolio and related stacks updated successfully`,
+      };
     }
   );

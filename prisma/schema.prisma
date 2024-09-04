@@ -25,6 +25,14 @@ model Portfolio {
   title           String
   content         String                               @db.Text
   href            String
+  stacks          PortfolioStack[]
+}
+
+model PortfolioStack {
+  id              Int                                 @id @default(autoincrement())
+  description     String
+  stackId         Int
+  portfolio       Portfolio                           @relation(fields: [stackId], references: [id], onDelete: Cascade)
 }
 
 model Education {
