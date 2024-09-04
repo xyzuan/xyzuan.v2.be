@@ -14,6 +14,7 @@ export const PortfolioController = createElysia()
       href: t.String(),
       title: t.String(),
       stacks: t.Array(t.String()),
+      isFeatured: t.Boolean(),
     }),
   })
   .get("/", async () => {
@@ -42,6 +43,7 @@ export const PortfolioController = createElysia()
         title: t.String(),
         content: t.String(),
         href: t.String(),
+        isFeatured: t.Boolean(),
         img: t.String(),
       }),
     }
