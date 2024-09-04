@@ -25,6 +25,7 @@ model Portfolio {
   title           String
   content         String                               @db.Text
   href            String
+  isFeatured      Boolean                              @default(false)
   stacks          PortfolioStack[]
 }
 
