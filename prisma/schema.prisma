@@ -23,9 +23,11 @@ model Portfolio {
   id              Int                                  @id @default(autoincrement())
   img             String
   title           String
-  content         String                               @db.Text
+  description     String?                              @db.Text
+  content         String?                              @db.Text
   href            String
   isFeatured      Boolean                              @default(false)
+  createdAt       DateTime                             @default(now())
   stacks          PortfolioStack[]
 }
 

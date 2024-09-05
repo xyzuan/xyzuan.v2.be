@@ -9,12 +9,14 @@ const portfolioService = new PortfolioService();
 export const PortfolioController = createElysia()
   .model({
     "portfolio.model": t.Object({
-      content: t.String(),
       img: t.String(),
       href: t.String(),
       title: t.String(),
+      description: t.Optional(t.String()),
+      content: t.Optional(t.String()),
       stacks: t.Array(t.String()),
       isFeatured: t.Boolean(),
+      createdAt: t.Optional(t.Date()),
     }),
   })
   .get("/", async () => {
@@ -38,14 +40,6 @@ export const PortfolioController = createElysia()
     },
     {
       body: "portfolio.model",
-      response: t.Object({
-        id: t.Number(),
-        title: t.String(),
-        content: t.String(),
-        href: t.String(),
-        isFeatured: t.Boolean(),
-        img: t.String(),
-      }),
     }
   )
   .delete("/:id", async ({ params: { id } }) => {

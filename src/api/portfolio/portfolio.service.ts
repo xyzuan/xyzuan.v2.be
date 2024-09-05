@@ -7,15 +7,18 @@ import {
 
 export class PortfolioService {
   async createPortfolio({
+    description,
     content,
     href,
     img,
     title,
     stacks,
     isFeatured,
+    createdAt,
   }: Omit<PortfolioWithStackSchema, "id">): Promise<Portfolio> {
     return prisma.portfolio.create({
       data: {
+        description,
         content,
         href,
         img,
@@ -26,11 +29,13 @@ export class PortfolioService {
             description,
           })),
         },
+        createdAt,
       },
       select: {
         id: true,
         title: true,
         content: true,
+        description: true,
         href: true,
         img: true,
         isFeatured: true,
@@ -40,6 +45,7 @@ export class PortfolioService {
             description: true,
           },
         },
+        createdAt: true,
       },
     });
   }
