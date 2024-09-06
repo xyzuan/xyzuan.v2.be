@@ -1,5 +1,5 @@
 import { Work } from "@prisma/client";
-import { prisma } from "@utils/prismaDatabase";
+import { prismaClient } from "../../libs/prismaDatabase";
 import { UpdateWorkData, WorkWithResponsibilitySchema } from "./work.schema";
 
 export class WorkService {
@@ -12,7 +12,7 @@ export class WorkService {
     instanceLink,
     date,
   }: Omit<WorkWithResponsibilitySchema, "id">): Promise<Work> {
-    return prisma.work.create({
+    return prismaClient.work.create({
       data: {
         logo,
         jobTitle,
@@ -45,7 +45,7 @@ export class WorkService {
   }
 
   async getWorkById(id: number): Promise<Work | null> {
-    return prisma.work.findUnique({
+    return prismaClient.work.findUnique({
       where: { id },
       include: {
         responsibilities: true,
@@ -54,7 +54,7 @@ export class WorkService {
   }
 
   async getAllWork(): Promise<Work[]> {
-    return prisma.work.findMany({
+    return prismaClient.work.findMany({
       include: {
         responsibilities: true,
       },
@@ -73,7 +73,7 @@ export class WorkService {
       };
     }
 
-    return prisma.work.update({
+    return prismaClient.work.update({
       where: { id },
       data: { ...updatedData },
       include: {
@@ -83,7 +83,7 @@ export class WorkService {
   }
 
   async deleteWork(id: number): Promise<Work> {
-    return prisma.work.delete({
+    return prismaClient.work.delete({
       where: { id },
     });
   }

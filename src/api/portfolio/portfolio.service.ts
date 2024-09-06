@@ -1,5 +1,5 @@
 import { Portfolio } from "@prisma/client";
-import { prisma } from "@utils/prismaDatabase";
+import { prismaClient } from "../../libs/prismaDatabase";
 import {
   PortfolioWithStackSchema,
   UpdatePortfolioData,
@@ -10,17 +10,19 @@ export class PortfolioService {
     description,
     content,
     href,
+    projectLink,
     img,
     title,
     stacks,
     isFeatured,
     createdAt,
   }: Omit<PortfolioWithStackSchema, "id">): Promise<Portfolio> {
-    return prisma.portfolio.create({
+    return prismaClient.portfolio.create({
       data: {
         description,
         content,
         href,
+        projectLink,
         img,
         title,
         isFeatured,
@@ -37,6 +39,7 @@ export class PortfolioService {
         content: true,
         description: true,
         href: true,
+        projectLink: true,
         img: true,
         isFeatured: true,
         stacks: {
@@ -51,7 +54,7 @@ export class PortfolioService {
   }
 
   async getPortfolioById(id: number): Promise<Portfolio | null> {
-    return prisma.portfolio.findUnique({
+    return prismaClient.portfolio.findUnique({
       where: { id },
       include: {
         stacks: true,
@@ -60,7 +63,7 @@ export class PortfolioService {
   }
 
   async getAllPortfolios(): Promise<Portfolio[]> {
-    return prisma.portfolio.findMany({
+    return prismaClient.portfolio.findMany({
       include: {
         stacks: true,
       },
@@ -86,7 +89,7 @@ export class PortfolioService {
       };
     }
 
-    return prisma.portfolio.update({
+    return prismaClient.portfolio.update({
       where: { id },
       data: { ...updatedData },
       include: {
@@ -96,7 +99,7 @@ export class PortfolioService {
   }
 
   async deletePortfolio(id: number): Promise<Portfolio> {
-    return prisma.portfolio.delete({
+    return prismaClient.portfolio.delete({
       where: { id },
     });
   }

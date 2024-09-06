@@ -7,9 +7,12 @@
     "start": "bun install && bunx prisma generate && bunx prisma db push && bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@bogeychan/elysia-logger": "^0.1.2",
     "@elysiajs/swagger": "^1.1.1",
+    "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/client": "5.19.0",
-    "elysia": "latest"
+    "lucia": "^3.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "bun-types": "latest",

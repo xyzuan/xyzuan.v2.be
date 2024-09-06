@@ -13,10 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model OAuthAccount {
+  provider          String // Provider
+  providerAccountId String @map("provider_account_id")
+  userId            String @map("user_id")
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
 model User {
-  id              Int                                  @id @default(autoincrement())
-  username        String                               @unique
-  password        String
+  id             String              @id @default(cuid())
+  email          String              @unique
+  emailVerified  Boolean             @default(false) @map("email_verified")
+  name           String
+  iconUrl        String?             @map("icon_url")
+  hashedPassword String?             @map("hashed_password")
+  passwordSalt   String?             @map("password_salt")
+  oauthAccounts  OAuthAccount[]
+  sessions       Session[]
+  passwordResets PasswordResetToken?
+}
+
+model Session {
+  id        String   @id
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  userId      String   @unique @map("user_id")
+  hashedToken String   @unique @map("hashed_token")
+  expiresAt   DateTime @map("expires_at")
+  user        User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
 model Portfolio {

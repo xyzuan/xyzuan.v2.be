@@ -1,8 +1,8 @@
 import { t } from "elysia";
 
-import { createElysia } from "@utils/createElysia";
 import { WorkService } from "./work.service";
 import { UpdateWorkData, WorkWithResponsibilitySchema } from "./work.schema";
+import { createElysia } from "@libs/elysia";
 
 const workService = new WorkService();
 
@@ -69,13 +69,21 @@ export const WorkController = createElysia()
       }),
     }
   )
-  .delete("/:id", async ({ params: { id } }) => {
-    await workService.deleteWork(parseInt(id));
-    return {
-      status: 200,
-      message: "Work and related responsibilities deleted successfully",
-    };
-  })
+  .delete(
+    "/:id",
+    async ({ params: { id } }) => {
+      await workService.deleteWork(parseInt(id));
+      return {
+        status: 200,
+        message: "Work and related responsibilities deleted successfully",
+      };
+    },
+    {
+      detail: {
+        tags: ["Works"],
+      },
+    }
+  )
   .patch(
     "/:id",
     async ({
