@@ -1,26 +1,16 @@
-import swagger from "@elysiajs/swagger";
-
 import apiRoutes from "./api";
 import { baseElysia } from "@libs/elysia";
+import cors from "@elysiajs/cors";
+import { docs } from "@libs/swagger";
 
 const api = baseElysia()
   .use(
-    swagger({
-      documentation: {
-        info: {
-          title: "xyzuan APIs Documentation",
-          version: "2.0.0",
-        },
-        tags: [
-          {
-            name: "Portfolios",
-            description: "Jody Yuantoro portofolios endpoints",
-          },
-          { name: "Works", description: "Jody Yuantoro works endpoints" },
-        ],
-      },
+    cors({
+      origin: ["xyzuan.my.id", "localhost:3031"],
+      allowedHeaders: ["Content-Type", "Authorization"],
     })
   )
+  .use(docs)
   .use(apiRoutes)
   .listen(process.env.PORT || 3031);
 

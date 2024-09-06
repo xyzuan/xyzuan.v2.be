@@ -60,6 +60,9 @@ const login = createElysia().post(
     }
   },
   {
+    detail: {
+      tags: ["Authorization Service"],
+    },
     body: t.Object({
       email: t.String({
         format: "email",

@@ -3,6 +3,7 @@ import { t } from "elysia";
 import { PortfolioService } from "./portfolio.service";
 import { PortfolioWithStackSchema } from "./portfolio.schema";
 import { createElysia } from "@libs/elysia";
+import { authGuard } from "@libs/authGuard";
 
 const portfolioService = new PortfolioService();
 
@@ -48,6 +49,7 @@ export const PortfolioController = createElysia()
       },
     }
   )
+  .use(authGuard)
   .post(
     "/",
     async ({ body }: { body: Omit<PortfolioWithStackSchema, "id"> }) => {

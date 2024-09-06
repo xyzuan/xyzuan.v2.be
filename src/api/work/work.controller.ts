@@ -3,6 +3,7 @@ import { t } from "elysia";
 import { WorkService } from "./work.service";
 import { UpdateWorkData, WorkWithResponsibilitySchema } from "./work.schema";
 import { createElysia } from "@libs/elysia";
+import { authGuard } from "@libs/authGuard";
 
 const workService = new WorkService();
 
@@ -46,6 +47,7 @@ export const WorkController = createElysia()
       },
     }
   )
+  .use(authGuard)
   .post(
     "/",
     async ({ body }: { body: Omit<WorkWithResponsibilitySchema, "id"> }) => {
