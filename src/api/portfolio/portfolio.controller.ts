@@ -20,18 +20,34 @@ export const PortfolioController = createElysia()
       createdAt: t.Optional(t.Date()),
     }),
   })
-  .get("/", async () => {
-    return {
-      status: 200,
-      data: await portfolioService.getAllPortfolios(),
-    };
-  })
-  .get("/:id", async ({ params: { id } }) => {
-    return {
-      status: 200,
-      data: await portfolioService.getPortfolioById(parseInt(id)),
-    };
-  })
+  .get(
+    "/",
+    async () => {
+      return {
+        status: 200,
+        data: await portfolioService.getAllPortfolios(),
+      };
+    },
+    {
+      detail: {
+        tags: ["Portfolios"],
+      },
+    }
+  )
+  .get(
+    "/:id",
+    async ({ params: { id } }) => {
+      return {
+        status: 200,
+        data: await portfolioService.getPortfolioById(parseInt(id)),
+      };
+    },
+    {
+      detail: {
+        tags: ["Portfolios"],
+      },
+    }
+  )
   .post(
     "/",
     async ({ body }: { body: Omit<PortfolioWithStackSchema, "id"> }) => {
@@ -41,15 +57,26 @@ export const PortfolioController = createElysia()
     },
     {
       body: "portfolio.model",
+      detail: {
+        tags: ["Portfolios"],
+      },
     }
   )
-  .delete("/:id", async ({ params: { id } }) => {
-    await portfolioService.deletePortfolio(parseInt(id));
-    return {
-      status: 200,
-      message: "Portfolio and related stacks deleted successfully",
-    };
-  })
+  .delete(
+    "/:id",
+    async ({ params: { id } }) => {
+      await portfolioService.deletePortfolio(parseInt(id));
+      return {
+        status: 200,
+        message: "Portfolio and related stacks deleted successfully",
+      };
+    },
+    {
+      detail: {
+        tags: ["Portfolios"],
+      },
+    }
+  )
   .patch(
     "/:id",
     async ({
@@ -64,5 +91,10 @@ export const PortfolioController = createElysia()
         status: 200,
         message: `Portfolio and related stacks updated successfully`,
       };
+    },
+    {
+      detail: {
+        tags: ["Portfolios"],
+      },
     }
   );

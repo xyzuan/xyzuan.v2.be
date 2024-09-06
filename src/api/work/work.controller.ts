@@ -18,18 +18,34 @@ export const WorkController = createElysia()
       date: t.String(),
     }),
   })
-  .get("/", async () => {
-    return {
-      status: 200,
-      data: await workService.getAllWork(),
-    };
-  })
-  .get("/:id", async ({ params: { id } }) => {
-    return {
-      status: 200,
-      data: await workService.getWorkById(parseInt(id)),
-    };
-  })
+  .get(
+    "/",
+    async () => {
+      return {
+        status: 200,
+        data: await workService.getAllWork(),
+      };
+    },
+    {
+      detail: {
+        tags: ["Works"],
+      },
+    }
+  )
+  .get(
+    "/:id",
+    async ({ params: { id } }) => {
+      return {
+        status: 200,
+        data: await workService.getWorkById(parseInt(id)),
+      };
+    },
+    {
+      detail: {
+        tags: ["Works"],
+      },
+    }
+  )
   .post(
     "/",
     async ({ body }: { body: Omit<WorkWithResponsibilitySchema, "id"> }) => {
@@ -38,6 +54,9 @@ export const WorkController = createElysia()
       });
     },
     {
+      detail: {
+        tags: ["Works"],
+      },
       body: "work.model",
       response: t.Object({
         id: t.Number(),
@@ -73,5 +92,10 @@ export const WorkController = createElysia()
         status: 200,
         message: "Work and related responsibilities updated successfully",
       };
+    },
+    {
+      detail: {
+        tags: ["Works"],
+      },
     }
   );
