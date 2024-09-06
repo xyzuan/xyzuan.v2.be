@@ -1,3 +1,7 @@
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from "@constants/exceptions";
 import { createElysia } from "@libs/elysia";
 import { lucia } from "@libs/luciaAuth";
 import { prismaClient } from "@libs/prismaDatabase";
@@ -23,6 +27,7 @@ const signup = createElysia().post(
 
     if (existingUser) {
       log.error("User already exists.");
+      throw new ConflictException("User already exists.");
     }
 
     const userId = generateId(15);
@@ -57,6 +62,7 @@ const signup = createElysia().post(
       return newUser;
     } catch (error) {
       log.error(error);
+      throw new InternalServerErrorException();
     }
   },
   {

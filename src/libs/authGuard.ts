@@ -1,6 +1,10 @@
 import { Elysia, t } from "elysia";
 import { type User, verifyRequestOrigin } from "lucia";
 import { lucia } from "./luciaAuth";
+import {
+  ForbiddenException,
+  UnauthorizedException,
+} from "@constants/exceptions";
 
 const sessionCookieName = lucia.sessionCookieName;
 
@@ -38,11 +42,11 @@ const authGuard = new Elysia({
             "localhost:3000",
           ]))
       ) {
-        // throw new ForbiddenException("Invalid origin");
+        throw new ForbiddenException("Invalid origin");
       }
 
       if (!sessionId) {
-        // throw new UnauthorizedException();
+        throw new UnauthorizedException();
       }
 
       const { session, user } = await lucia.validateSession(sessionId || "");
@@ -53,7 +57,7 @@ const authGuard = new Elysia({
           value: newSessionCookie.value,
           ...newSessionCookie.attributes,
         });
-        // throw new UnauthorizedException();
+        throw new UnauthorizedException();
       }
 
       if (session?.fresh) {

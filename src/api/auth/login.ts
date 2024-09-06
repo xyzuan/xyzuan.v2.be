@@ -1,3 +1,4 @@
+import { BadRequestException } from "@constants/exceptions";
 import { createElysia } from "@libs/elysia";
 import { lucia } from "@libs/luciaAuth";
 import { prismaClient } from "@libs/prismaDatabase";
@@ -21,6 +22,7 @@ const login = createElysia().post(
 
     if (!user || !user.passwordSalt || !user.hashedPassword) {
       log.error("User not found.");
+      throw new BadRequestException("User not found.");
     }
 
     const passwordPepper = PASSWORD_PEPPER;
@@ -31,7 +33,6 @@ const login = createElysia().post(
     }
 
     if (!user || !user.passwordSalt || !user.hashedPassword) {
-      set.status = 422;
       log.error("User data is missing or incomplete.");
     } else if (
       !(await bunPassword.verify(
@@ -39,8 +40,8 @@ const login = createElysia().post(
         user.hashedPassword
       ))
     ) {
-      set.status = 403;
       log.error("Password is invalid.");
+      throw new BadRequestException("Password is invalid.");
     } else {
       try {
         const session = await lucia.createSession(user.id, {});
