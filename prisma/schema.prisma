@@ -25,10 +25,11 @@ model Portfolio {
   title           String
   description     String?                              @db.Text
   content         String?                              @db.Text
-  href            String
+  href            String?
+  projectLink     String?
   isFeatured      Boolean                              @default(false)
-  createdAt       DateTime                             @default(now())
   stacks          PortfolioStack[]
+  createdAt       DateTime                             @default(now())
 }
 
 model PortfolioStack {

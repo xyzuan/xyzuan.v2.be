@@ -10,12 +10,13 @@ export const PortfolioController = createElysia()
   .model({
     "portfolio.model": t.Object({
       img: t.String(),
-      href: t.String(),
       title: t.String(),
       description: t.Optional(t.String()),
       content: t.Optional(t.String()),
-      stacks: t.Array(t.String()),
+      href: t.Optional(t.String()),
+      projectLink: t.Optional(t.String()),
       isFeatured: t.Boolean(),
+      stacks: t.Array(t.String()),
       createdAt: t.Optional(t.Date()),
     }),
   })
