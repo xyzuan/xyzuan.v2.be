@@ -3,7 +3,7 @@ import { Google as GoogleInstance } from "arctic";
 
 const clientId = process.env.GOOGLE_CLIENT_ID!;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-const baseURL = process.env.BASE_URL ?? "http://localhost:3001";
+const baseURL = process.env.BASE_URL ?? "http://localhost:3031";
 
 const google = new GoogleInstance(
   clientId,
