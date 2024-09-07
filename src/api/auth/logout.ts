@@ -4,7 +4,7 @@ import { lucia } from "@libs/luciaAuth";
 
 const logout = createElysia().post(
   "/logout",
-  async ({ cookie, log }) => {
+  async ({ cookie, env: { DOMAIN } }) => {
     const sessionCookie = cookie[lucia.sessionCookieName];
 
     if (!sessionCookie?.value) {
@@ -15,6 +15,7 @@ const logout = createElysia().post(
 
     sessionCookie.set({
       value: blankSessionCookie.value,
+      domain: DOMAIN,
       ...blankSessionCookie.attributes,
     });
   },

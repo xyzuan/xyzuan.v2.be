@@ -12,7 +12,7 @@ const login = createElysia().post(
     cookie,
     set,
     log,
-    env: { PASSWORD_PEPPER },
+    env: { DOMAIN, PASSWORD_PEPPER },
   }) => {
     const user = await prismaClient.user.findUnique({
       where: {
@@ -50,6 +50,7 @@ const login = createElysia().post(
         set.status = 200;
         cookie[sessionCookie.name]?.set({
           value: sessionCookie.value,
+          domain: DOMAIN,
           ...sessionCookie.attributes,
         });
 
@@ -64,9 +65,7 @@ const login = createElysia().post(
       tags: ["Authorization Service"],
     },
     body: t.Object({
-      email: t.String({
-        format: "email",
-      }),
+      email: t.String(),
       password: t.String(),
     }),
   }

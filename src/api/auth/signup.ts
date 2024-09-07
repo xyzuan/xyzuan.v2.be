@@ -17,7 +17,7 @@ const signup = createElysia().post(
     cookie,
     set,
     log,
-    env: { PASSWORD_PEPPER: passwordPepper },
+    env: { DOMAIN, PASSWORD_PEPPER: passwordPepper },
   }) => {
     const existingUser = await prismaClient.user.findUnique({
       where: {
@@ -56,6 +56,7 @@ const signup = createElysia().post(
       set.status = 201;
       cookie[sessionCookie.name]?.set({
         value: sessionCookie.value,
+        domain: DOMAIN,
         ...sessionCookie.attributes,
       });
 

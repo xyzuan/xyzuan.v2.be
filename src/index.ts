@@ -6,7 +6,7 @@ import { docs } from "@libs/swagger";
 const api = baseElysia()
   .use(
     cors({
-      origin: ["xyzuan.my.id", "localhost:3031"],
+      origin: ["xyzuan.my.id", "localhost:3000"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   )

@@ -3,7 +3,7 @@ import swagger from "@elysiajs/swagger";
 export const docs = swagger({
   documentation: {
     info: {
-      title: "xyzuan APIs Documentation",
+      title: "xyzuan V2 elysiaJS APIs Documentation",
       version: "2.0.0",
     },
     tags: [

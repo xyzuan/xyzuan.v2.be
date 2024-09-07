@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const envValidateScheme = z.object({
   NODE_ENV: z.string(),
+  DOMAIN: z.string(),
   // DATABASE_URL: z.string(),
   // GOOGLE_CLIENT_ID: z.string(),
   // GOOGLE_CLIENT_SECRET: z.string(),
