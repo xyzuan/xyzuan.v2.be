@@ -17,6 +17,7 @@ const providerCallback = createElysia().get(
     cookie,
     params: { provider },
     set,
+    env: { DOMAIN },
     log,
   }) => {
     const { oauth_state, oauth_code_verifier, oauth_next } = cookie;
@@ -88,6 +89,7 @@ const providerCallback = createElysia().get(
       const sessionCookie = lucia.createSessionCookie(session.id);
 
       cookie[sessionCookie.name]?.set({
+        domain: DOMAIN,
         value: sessionCookie.value,
         ...sessionCookie.attributes,
       });

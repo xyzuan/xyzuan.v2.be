@@ -8,7 +8,7 @@ const baseURL = process.env.BASE_URL ?? "http://localhost:3031";
 const google = new GoogleInstance(
   clientId,
   clientSecret,
-  `${baseURL}/auth/google/callback`
+  `${baseURL}/v2/auth/google/callback`
 );
 
 const authUrl = async (state: string, codeVerifier: string) =>
