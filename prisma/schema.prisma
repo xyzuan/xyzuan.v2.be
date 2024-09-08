@@ -33,6 +33,7 @@ model User {
   passwordSalt   String?             @map("password_salt")
   oauthAccounts  OAuthAccount[]
   sessions       Session[]
+  messages       Message[] 
   passwordResets PasswordResetToken?
 }
 
@@ -48,6 +49,15 @@ model PasswordResetToken {
   hashedToken String   @unique @map("hashed_token")
   expiresAt   DateTime @map("expires_at")
   user        User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+  isShow    Boolean? @default(true) @map("is_show")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 model Portfolio {
