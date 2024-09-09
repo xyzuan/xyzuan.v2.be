@@ -17,6 +17,7 @@ export const MessageController = createElysia()
                 name: true,
                 email: true,
                 iconUrl: true,
+                isAdmin: true,
               },
             },
           },
