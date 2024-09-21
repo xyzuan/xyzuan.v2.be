@@ -11,7 +11,7 @@
     "@elysiajs/cors": "^1.1.1",
     "@elysiajs/swagger": "^1.1.1",
     "@lucia-auth/adapter-prisma": "^4.0.1",
-    "@prisma/client": "5.19.0",
+    "@prisma/client": "5.19.1",
     "arctic": "^1.9.2",
     "lucia": "^3.2.0",
     "zod": "^3.23.8"
