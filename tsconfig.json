@@ -32,6 +32,7 @@
     "paths": {
       "@constants/*": ["./src/constants/*"],
       "@api/*": ["./src/api/*"],
+      "@controller/*": ["./src/api/controller/*"],
       "@utils/*": ["./src/utils/*"],
       "@libs/*": ["./src/libs/*"],
       "@t/*": ["./src/types/*"]

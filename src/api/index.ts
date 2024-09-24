@@ -1,9 +1,9 @@
 import { createElysia } from "@libs/elysia";
-import { PortfolioController } from "./portfolio/portfolio.controller";
-import { WorkController } from "./work/work.controller";
-import { MessageController } from "./message/message.controller";
-import { auth } from "./auth";
-import { me } from "./user/user";
+import { PortfolioController } from "./controller/portfolio.controller";
+import { WorkController } from "./controller/work.controller";
+import { MessageController } from "./controller/message.controller";
+import { auth } from "./controller/auth";
+import { me } from "./controller/user.controller";
 
 const apiRoutes = createElysia({ prefix: "v2/" })
   .group("auth", (api) => api.use(auth))

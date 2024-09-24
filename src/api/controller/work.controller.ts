@@ -1,11 +1,8 @@
 import { t } from "elysia";
 
-import { WorkService } from "./work.service";
-import { UpdateWorkData, WorkWithResponsibilitySchema } from "./work.schema";
 import { createElysia } from "@libs/elysia";
 import { authGuard } from "@libs/authGuard";
-
-const workService = new WorkService();
+import { prismaClient } from "@libs/prismaDatabase";
 
 export const WorkController = createElysia()
   .model({
@@ -24,7 +21,11 @@ export const WorkController = createElysia()
     async () => {
       return {
         status: 200,
-        data: await workService.getAllWork(),
+        data: await prismaClient.work.findMany({
+          include: {
+            responsibilities: true,
+          },
+        }),
       };
     },
     {
@@ -38,7 +39,12 @@ export const WorkController = createElysia()
     async ({ params: { id } }) => {
       return {
         status: 200,
-        data: await workService.getWorkById(parseInt(id)),
+        data: await prismaClient.work.findUnique({
+          where: { id: parseInt(id) },
+          include: {
+            responsibilities: true,
+          },
+        }),
       };
     },
     {
@@ -50,9 +56,31 @@ export const WorkController = createElysia()
   .use(authGuard)
   .post(
     "/",
-    async ({ body }: { body: Omit<WorkWithResponsibilitySchema, "id"> }) => {
-      return await workService.createWork({
-        ...body,
+    async ({ body }) => {
+      return await prismaClient.work.create({
+        data: {
+          ...body,
+          responsibilities: {
+            create: body.responsibilities.map((description: string) => ({
+              description,
+            })),
+          },
+        },
+        select: {
+          id: true,
+          logo: true,
+          jobTitle: true,
+          address: true,
+          instance: true,
+          instanceLink: true,
+          date: true,
+          responsibilities: {
+            select: {
+              id: true,
+              description: true,
+            },
+          },
+        },
       });
     },
     {
@@ -74,7 +102,9 @@ export const WorkController = createElysia()
   .delete(
     "/:id",
     async ({ params: { id } }) => {
-      await workService.deleteWork(parseInt(id));
+      await prismaClient.work.delete({
+        where: { id: parseInt(id) },
+      });
       return {
         status: 200,
         message: "Work and related responsibilities deleted successfully",
@@ -88,15 +118,23 @@ export const WorkController = createElysia()
   )
   .patch(
     "/:id",
-    async ({
-      params: { id },
-      body,
-    }: {
-      params: { id: string };
-      body: UpdateWorkData;
-    }) => {
-      await workService.updateWork(parseInt(id), {
-        ...body,
+    async ({ params: { id }, body }) => {
+      let updatedData: any = { ...body };
+
+      if (body.responsibilities) {
+        updatedData.responsibilities = {
+          deleteMany: {},
+          create: body.responsibilities.map((description) => ({
+            description,
+          })),
+        };
+      }
+      await prismaClient.work.update({
+        where: { id: parseInt(id) },
+        data: { ...updatedData },
+        include: {
+          responsibilities: true,
+        },
       });
       return {
         status: 200,
@@ -104,6 +142,7 @@ export const WorkController = createElysia()
       };
     },
     {
+      body: "work.model",
       detail: {
         tags: ["Works"],
       },
