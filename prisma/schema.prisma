@@ -68,6 +68,7 @@ model Blog {
   title           String
   description     String       @db.Text
   content         String       @db.Text
+  tags            String?      @db.Text
   viewCount       Int          @default(0)
   createdAt       DateTime     @default(now())
   comments        BlogComment[]

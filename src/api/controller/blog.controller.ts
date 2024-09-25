@@ -10,7 +10,9 @@ export const BlogController = createElysia()
     "blog.model": t.Object({
       img: t.String(),
       title: t.String(),
+      description: t.String(),
       content: t.String(),
+      tags: t.Optional(t.String()),
       createdAt: t.Optional(t.Date()),
     }),
     "blog.comment": t.Object({
