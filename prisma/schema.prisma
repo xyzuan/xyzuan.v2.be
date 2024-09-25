@@ -31,10 +31,12 @@ model User {
   iconUrl        String?             @map("icon_url")
   hashedPassword String?             @map("hashed_password")
   passwordSalt   String?             @map("password_salt")
+  passwordResets PasswordResetToken?
   oauthAccounts  OAuthAccount[]
   sessions       Session[]
-  messages       Message[] 
-  passwordResets PasswordResetToken?
+  messages       Message[]
+  blogReaction   BlogReaction[]
+  blogComment    BlogComment[]
 }
 
 model Session {
@@ -58,6 +60,46 @@ model Message {
   isShow    Boolean? @default(true) @map("is_show")
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model Blog {
+  id              Int          @id @default(autoincrement())
+  img             String
+  title           String
+  description     String       @db.Text
+  content         String       @db.Text
+  viewCount       Int          @default(0)
+  createdAt       DateTime     @default(now())
+  comments        BlogComment[]
+  reactions       BlogReaction[]
+}
+
+model BlogComment {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  blogId      Int
+  content     String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  blog        Blog     @relation(fields: [blogId], references: [id])
+}
+
+model BlogReaction {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  blogId      Int
+  type        BlogReactionType   
+  blog        Blog     @relation(fields: [blogId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+enum BlogReactionType {
+  LIKE
+  LOVE
+  DISLIKE
+  WOW
+  SAD
+  ANGRY
 }
 
 model Portfolio {
