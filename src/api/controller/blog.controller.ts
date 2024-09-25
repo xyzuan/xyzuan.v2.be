@@ -40,6 +40,9 @@ export const BlogController = createElysia()
               comments: true,
               reactions: true,
             },
+            orderBy: {
+              createdAt: "desc",
+            },
           })
           .then((data) =>
             data.map((blog) => ({
