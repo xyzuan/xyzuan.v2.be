@@ -67,7 +67,17 @@ export const BlogController = createElysia()
           id: parseInt(id),
         },
         include: {
-          reactions: true,
+          reactions: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  iconUrl: true,
+                },
+              },
+            },
+          },
           comments: {
             include: {
               user: {
