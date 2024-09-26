@@ -74,6 +74,7 @@ export const BlogController = createElysia()
                 select: {
                   name: true,
                   iconUrl: true,
+                  isAdmin: true,
                 },
               },
             },
