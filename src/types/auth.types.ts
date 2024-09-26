@@ -1,4 +1,4 @@
-export type AuthProvider = "google";
+export type AuthProvider = "google" | "github";
 
 export type BaseAuthAccountInfo = {
   id: string;

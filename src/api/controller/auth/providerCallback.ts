@@ -111,7 +111,7 @@ const providerCallback = createElysia().get(
       { additionalProperties: true }
     ),
     params: t.Object({
-      provider: t.Union([t.Literal("google")]),
+      provider: t.Union([t.Literal("google"), t.Literal("github")]),
     }),
   }
 );
