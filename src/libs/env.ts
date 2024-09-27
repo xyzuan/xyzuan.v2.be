@@ -9,6 +9,8 @@ const envValidateScheme = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
+  LINKEDIN_CLIENT_ID: z.string(),
+  LINKEDIN_CLIENT_SECRET: z.string(),
   PASSWORD_PEPPER: z.string(),
 });
 

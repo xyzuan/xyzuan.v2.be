@@ -44,7 +44,6 @@ const getAccount = async (
 
 type GoogleResponse = openIdConnectUserInfo;
 
-export type { GoogleResponse };
 export {
   google,
   authUrl as googleAuthUrl,

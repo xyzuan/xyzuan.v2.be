@@ -3,11 +3,8 @@ import { GitHub as GithubInstance } from "arctic";
 
 const clientId = process.env.GITHUB_CLIENT_ID!;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET!;
-const baseURL = process.env.BASE_URL ?? "http://localhost:3031";
 
-const github = new GithubInstance(clientId, clientSecret, {
-  redirectURI: `${baseURL}/v2/auth/github/callback`,
-});
+const github = new GithubInstance(clientId, clientSecret);
 
 const authUrl = async (state: string) =>
   await github.createAuthorizationURL(state, {
@@ -86,7 +83,6 @@ interface GitHubResponse {
   };
 }
 
-export type { GitHubResponse };
 export {
   github,
   authUrl as githubAuthUrl,
