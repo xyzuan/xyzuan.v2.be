@@ -3,6 +3,7 @@ import { t } from "elysia";
 import { authGuard } from "@libs/authGuard";
 import { prismaClient } from "@libs/prismaDatabase";
 import { UnauthorizedException } from "@constants/exceptions";
+import { rateLimit } from "elysia-rate-limit";
 
 export const MessageController = createElysia()
   .get(
@@ -31,6 +32,7 @@ export const MessageController = createElysia()
     }
   )
   .use(authGuard)
+  .use(rateLimit())
   .post(
     "/",
     async ({ body: { message }, user }) => {

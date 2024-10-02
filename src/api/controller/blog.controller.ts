@@ -4,6 +4,7 @@ import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
+import { rateLimit } from "elysia-rate-limit";
 
 export const BlogController = createElysia()
   .model({
@@ -135,6 +136,7 @@ export const BlogController = createElysia()
     }
   )
   .use(authGuard)
+  .use(rateLimit())
   .post(
     "/",
     async ({ body }) => {
