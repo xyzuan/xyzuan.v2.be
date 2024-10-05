@@ -54,12 +54,16 @@ model PasswordResetToken {
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  message   String
-  createdAt DateTime @default(now()) @map("created_at")
-  isShow    Boolean? @default(true) @map("is_show")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  id              String    @id @default(cuid())
+  mentionedToId   String?
+  message         String
+  createdAt       DateTime  @default(now()) @map("created_at")
+  isShow          Boolean?  @default(true) @map("is_show")
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
+
+  mentionedTo     Message?  @relation("MessageMentions", fields: [mentionedToId], references: [id])
+  mentionedBy     Message[] @relation("MessageMentions")
 }
 
 model Blog {

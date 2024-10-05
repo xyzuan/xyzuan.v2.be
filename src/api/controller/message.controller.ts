@@ -13,6 +13,9 @@ export const MessageController = createElysia()
       return {
         status: 200,
         data: await prismaClient.message.findMany({
+          orderBy: {
+            createdAt: "asc",
+          },
           include: {
             user: {
               select: {
@@ -20,6 +23,17 @@ export const MessageController = createElysia()
                 email: true,
                 iconUrl: true,
                 isAdmin: true,
+              },
+            },
+            mentionedBy: true,
+            mentionedTo: {
+              select: {
+                message: true,
+                user: {
+                  select: {
+                    name: true,
+                  },
+                },
               },
             },
           },
@@ -36,7 +50,40 @@ export const MessageController = createElysia()
   .use(rateLimit())
   .post(
     "/",
-    async ({ body: { message }, user, env }) => {
+    async ({ body: { message, messageMentionId }, user, env }) => {
+      let mentionedMessage = null;
+
+      if (messageMentionId) {
+        mentionedMessage = await prismaClient.message.findUnique({
+          where: { id: messageMentionId },
+        });
+
+        if (!mentionedMessage) {
+          return {
+            status: 404,
+            error: `Message with ID ${messageMentionId} not found`,
+          };
+        }
+      }
+
+      const createdMessage = await prismaClient.message.create({
+        data: {
+          message,
+          mentionedTo: messageMentionId
+            ? {
+                connect: {
+                  id: messageMentionId,
+                },
+              }
+            : undefined,
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+
       telegram.sendMessage(
         env.TELEGRAM_CHAT_ID,
         `@xyzuan\nMessage received from ${user.name}, ${message}\n\nCheck it out in https://xyzuan.my.id/chats `,
@@ -45,16 +92,7 @@ export const MessageController = createElysia()
 
       return {
         status: 200,
-        data: await prismaClient.message.create({
-          data: {
-            message,
-            user: {
-              connect: {
-                id: user.id,
-              },
-            },
-          },
-        }),
+        data: createdMessage,
       };
     },
     {
@@ -63,6 +101,7 @@ export const MessageController = createElysia()
       },
       body: t.Object({
         message: t.String(),
+        messageMentionId: t.Optional(t.String()),
       }),
     }
   )
