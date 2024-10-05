@@ -4,6 +4,7 @@ import { authGuard } from "@libs/authGuard";
 import { prismaClient } from "@libs/prismaDatabase";
 import { UnauthorizedException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
+import { telegram } from "@libs/telegram";
 
 export const MessageController = createElysia()
   .get(
@@ -35,7 +36,13 @@ export const MessageController = createElysia()
   .use(rateLimit())
   .post(
     "/",
-    async ({ body: { message }, user }) => {
+    async ({ body: { message }, user, env }) => {
+      telegram.sendMessage(
+        env.TELEGRAM_CHAT_ID,
+        `@xyzuan\nMessage received from ${user.name}, ${message}\n\nCheck it out in https://xyzuan.my.id/chats `,
+        { parse_mode: "Markdown" }
+      );
+
       return {
         status: 200,
         data: await prismaClient.message.create({

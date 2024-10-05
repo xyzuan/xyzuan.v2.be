@@ -5,6 +5,7 @@ import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
+import { telegram } from "@libs/telegram";
 
 export const BlogController = createElysia()
   .model({
@@ -154,7 +155,7 @@ export const BlogController = createElysia()
   )
   .post(
     "/comment/:id",
-    async ({ body, params: { id }, user }) => {
+    async ({ body, params: { id }, user, env }) => {
       const { content } = body;
       const blog = await prismaClient.blog.findUnique({
         where: { id: parseInt(id) },
@@ -163,6 +164,12 @@ export const BlogController = createElysia()
       if (!blog) {
         throw new BadRequestException("Blog not found.");
       }
+
+      telegram.sendMessage(
+        env.TELEGRAM_CHAT_ID,
+        `@xyzuan\nNew Blog comment from ${user.name}, ${content}\n\nCheck the blog comments in https://xyzuan.my.id/blogs/${blog.id} `,
+        { parse_mode: "Markdown" }
+      );
 
       return {
         status: 200,
