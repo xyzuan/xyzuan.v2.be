@@ -165,11 +165,11 @@ export const BlogController = createElysia()
         throw new BadRequestException("Blog not found.");
       }
 
-      telegram.sendMessage(
-        env.TELEGRAM_CHAT_ID,
-        `@xyzuan\nNew Blog comment from ${user.name}, ${content}\n\nCheck the blog comments in https://xyzuan.my.id/blogs/${blog.id} `,
-        { parse_mode: "Markdown" }
-      );
+      // telegram.sendMessage(
+      //   env.TELEGRAM_CHAT_ID,
+      //   `@xyzuan\nNew Blog comment from ${user.name}, ${content}\n\nCheck the blog comments in https://xyzuan.my.id/blogs/${blog.id} `,
+      //   { parse_mode: "Markdown" }
+      // );
 
       return {
         status: 200,
