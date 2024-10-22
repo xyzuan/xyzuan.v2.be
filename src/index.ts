@@ -6,7 +6,7 @@ import apiRoutes from "./api";
 const api = baseElysia()
   .use(
     cors({
-      origin: ["xyzuan.my.id", "localhost:3000"],
+      origin: ["xyzuan.my.id", "localhost:3000", "localhost"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   )

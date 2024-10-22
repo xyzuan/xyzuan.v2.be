@@ -43,9 +43,9 @@ const authGuard = new Elysia({
             "http://api.xyzuan.my.id",
             "api.xyzuan.my.id",
             "http://localhost:3000",
-            "http://localhost:3031",
+            "http://localhost:3121",
             "localhost:3000",
-            "localhost:3031",
+            "localhost:3121",
           ]))
       ) {
         throw new ForbiddenException("Invalid origin");

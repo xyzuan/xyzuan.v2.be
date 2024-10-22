@@ -28,6 +28,9 @@ model User {
   emailVerified  Boolean             @default(false) @map("email_verified")
   isAdmin        Boolean             @default(false)
   name           String
+  headline       String?
+  location       String?
+  bannerUrl      String?
   iconUrl        String?             @map("icon_url")
   hashedPassword String?             @map("hashed_password")
   passwordSalt   String?             @map("password_salt")
