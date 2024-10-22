@@ -9,7 +9,9 @@ export const CloudinaryController = createElysia()
   .post(
     "/upload",
     async ({ body }) => {
-      const secureUrl = await cloudinary.uploader.upload(body.image);
+      const secureUrl = await cloudinary.uploader.upload(body.image, {
+        transformation: [{ quality: "auto:good" }, { fetch_format: "auto" }],
+      });
       return {
         status: "200",
         data: {
