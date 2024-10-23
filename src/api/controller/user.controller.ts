@@ -5,6 +5,24 @@ import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 
 const me = createElysia()
+  .get("/:id", async ({ params: { id } }) => {
+    return {
+      status: 200,
+      data: await prismaClient.user.findUnique({
+        where: {
+          id: id,
+        },
+        select: {
+          name: true,
+          email: true,
+          location: true,
+          headline: true,
+          bannerUrl: true,
+          iconUrl: true,
+        },
+      }),
+    };
+  })
   .use(authGuard)
   .get(
     "/",
