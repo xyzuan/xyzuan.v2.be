@@ -61,6 +61,7 @@ const me = createElysia()
       },
       body: t.Object({
         name: t.Optional(t.String()),
+        about: t.Optional(t.String()),
         iconUrl: t.Optional(t.String()),
         bannerUrl: t.Optional(t.String()),
         headline: t.Optional(t.String()),

@@ -3,8 +3,6 @@ import { t } from "elysia";
 import { authGuard } from "@libs/authGuard";
 import { prismaClient } from "@libs/prismaDatabase";
 import { UnauthorizedException } from "@constants/exceptions";
-import { rateLimit } from "elysia-rate-limit";
-import { telegram } from "@libs/telegram";
 
 export const MessageController = createElysia()
   .get(

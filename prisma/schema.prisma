@@ -30,6 +30,7 @@ model User {
   name           String
   headline       String?
   location       String?
+  about          String?
   bannerUrl      String?
   iconUrl        String?             @map("icon_url")
   hashedPassword String?             @map("hashed_password")

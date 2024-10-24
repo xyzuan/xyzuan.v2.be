@@ -15,6 +15,7 @@ const lucia = new Lucia(adapter, {
     return {
       name: attributes.name,
       email: attributes.email,
+      about: attributes.about,
       iconUrl: attributes.iconUrl,
       bannerUrl: attributes.bannerUrl,
       isAdmin: attributes.isAdmin,
@@ -34,6 +35,7 @@ declare module "lucia" {
 interface DatabaseUserAttributes {
   name: User["name"];
   email: User["email"];
+  about: User["about"];
   iconUrl: User["iconUrl"];
   bannerUrl: User["bannerUrl"];
   isAdmin: User["isAdmin"];

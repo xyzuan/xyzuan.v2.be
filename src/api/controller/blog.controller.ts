@@ -5,7 +5,6 @@ import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
-import { telegram } from "@libs/telegram";
 
 export const BlogController = createElysia()
   .model({
@@ -85,7 +84,11 @@ export const BlogController = createElysia()
               user: {
                 select: {
                   name: true,
+                  email: true,
                   iconUrl: true,
+                  bannerUrl: true,
+                  location: true,
+                  headline: true,
                   isAdmin: true,
                 },
               },
