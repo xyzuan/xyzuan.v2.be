@@ -83,6 +83,7 @@ export const BlogController = createElysia()
             include: {
               user: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                   iconUrl: true,

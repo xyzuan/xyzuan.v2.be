@@ -15,10 +15,12 @@ const me = createElysia()
         select: {
           name: true,
           email: true,
+          iconUrl: true,
+          bannerUrl: true,
+          about: true,
           location: true,
           headline: true,
-          bannerUrl: true,
-          iconUrl: true,
+          isAdmin: true,
         },
       }),
     };
