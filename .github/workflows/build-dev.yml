@@ -73,5 +73,10 @@ jobs:
           docker rm -f xyzuan-api-v2-dev
 
           echo 'Running the Docker Container...'
-          docker run -d -p 61131:3121 --name xyzuan-api-v2-dev ghcr.io/xyzuan/xyzuan_api_v2:dev
+          docker run -d \
+            --name xyzuan-api-v2-dev \
+            --restart always \
+            --network nginx_default \
+            -p 3121:3121 \
+            ghcr.io/xyzuan/xyzuan_api_v2:dev
           EOF
