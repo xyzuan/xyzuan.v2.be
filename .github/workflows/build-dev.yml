@@ -19,6 +19,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Log in to Github Container Registry
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
+
       - name: Build Docker image
         run: |
           docker build \
@@ -38,15 +41,14 @@ jobs:
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
-          -t ghcr.io/xyzuan/xyzuan_api_v2:latest -f misc/Dockerfile.dev .
+          -t ghcr.io/xyzuan/xyzuan_api_v2:dev -f misc/Dockerfile.dev .
 
       - name: Tag Docker image
         run: |
           IMAGE_NAME=ghcr.io/xyzuan/xyzuan_api_v2
-          docker tag $IMAGE_NAME:latest $IMAGE_NAME:$(echo "${{ github.sha }}" | head -c 7)
+          docker tag $IMAGE_NAME:dev $IMAGE_NAME:$(echo "${{ github.sha }}" | head -c 7)
 
       - name: Push Docker image
         run: |
-          docker login --username xyzuan --password ${{ secrets.GH_TOKEN }} ghcr.io
-          docker push ghcr.io/xyzuan/xyzuan_api_v2:latest
+          docker push ghcr.io/xyzuan/xyzuan_api_v2:dev
           docker push ghcr.io/xyzuan/xyzuan_api_v2:$(echo "${{ github.sha }}" | head -c 7)
