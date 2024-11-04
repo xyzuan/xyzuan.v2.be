@@ -1,4 +1,4 @@
-name: Build xyzuan-be Development Build
+name: Build xyzuan-api-v2 Development Build
 
 on:
   push:
@@ -38,15 +38,15 @@ jobs:
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
-          -t ghcr.io/xyzuan/xyzuan_be:latest -f misc/Dockerfile.dev .
+          -t ghcr.io/xyzuan/xyzuan_api_v2:latest -f misc/Dockerfile.dev .
 
       - name: Tag Docker image
         run: |
-          IMAGE_NAME=ghcr.io/xyzuan/xyzuan_be
-          GIT_SHA=$(echo "${{ github.sha }}" | head -c 7)
-          docker tag $IMAGE_NAME:latest $IMAGE_NAME:$GIT_SHA
+          IMAGE_NAME=ghcr.io/xyzuan/xyzuan_api_v2
+          docker tag $IMAGE_NAME:latest $IMAGE_NAME:$(echo "${{ github.sha }}" | head -c 7)
 
       - name: Push Docker image
         run: |
           docker login --username xyzuan --password ${{ secrets.GH_TOKEN }} ghcr.io
-          docker push ghcr.io/xyzuan/xyzuan_be
+          docker push ghcr.io/xyzuan/xyzuan_api_v2:latest
+          docker push ghcr.io/xyzuan/xyzuan_api_v2:$(echo "${{ github.sha }}" | head -c 7)
