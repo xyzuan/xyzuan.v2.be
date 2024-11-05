@@ -22,6 +22,7 @@ jobs:
           echo "SHA=$(echo "$GITHUB_SHA" | head -c 7)" >> $GITHUB_ENV
           echo "ENV=production" >> $GITHUB_ENV
           echo "PORT=3131" >> $GITHUB_ENV
+          echo "BASE_URL=https://api.xyzuan.my.id" >> $GITHUB_ENV
           echo "CT_NAME=xyzuan-api-v2" >> $GITHUB_ENV
           echo "DOMAIN=xyzuan.my.id" >> $GITHUB_ENV
           echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
@@ -41,6 +42,7 @@ jobs:
           docker build \
           --build-arg PORT=${{ env.PORT }} \
           --build-arg NODE_ENV=${{ env.ENV }} \
+          --build-arg BASE_URL=${{ env.BASE_URL }} \
           --build-arg DOMAIN=${{ env.DOMAIN }} \
           --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
           --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} \
