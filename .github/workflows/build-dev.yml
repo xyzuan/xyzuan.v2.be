@@ -1,9 +1,9 @@
 name: Build xyzuan-api-v2 Development Build
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Run Tests with Elysia Treaty"]
+    types: [completed]
 
 jobs:
   build:
