@@ -22,7 +22,7 @@
   "devDependencies": {
     "@types/node-telegram-bot-api": "^0.64.7",
     "bun-types": "latest",
-    "prisma": "^5.19.0"
+    "prisma": "5.19.1"
   },
   "module": "src/index.js"
 }
