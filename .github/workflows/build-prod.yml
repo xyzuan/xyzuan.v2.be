@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Initialize Bun Environtment
         uses: oven-sh/setup-bun@v2
@@ -54,7 +54,7 @@ jobs:
     if: success()
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Settle up Docker Buildx
         uses: docker/setup-buildx-action@v3
