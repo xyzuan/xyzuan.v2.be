@@ -11,10 +11,8 @@ const google = new GoogleInstance(
   `${baseURL}/v2/auth/google/callback`
 );
 
-const authUrl = async (state: string, codeVerifier: string) =>
-  await google.createAuthorizationURL(state, codeVerifier, {
-    scopes: ["profile", "email"],
-  });
+const authUrl = (state: string, codeVerifier: string) =>
+  google.createAuthorizationURL(state, codeVerifier, ["profile", "email"]);
 
 const getTokens = async (code: string, codeVerifier: string) =>
   google.validateAuthorizationCode(code, codeVerifier);
