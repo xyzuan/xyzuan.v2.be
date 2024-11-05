@@ -22,6 +22,7 @@ jobs:
           echo "SHA=$(echo "$GITHUB_SHA" | head -c 7)" >> $GITHUB_ENV
           echo "ENV=production" >> $GITHUB_ENV
           echo "PORT=3131" >> $GITHUB_ENV
+          echo "CT_NAME=xyzuan-api-v2" >> $GITHUB_ENV
           echo "DOMAIN=xyzuan.my.id" >> $GITHUB_ENV
           echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
           echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
@@ -77,11 +78,11 @@ jobs:
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
           echo 'Force Blowing the exist Docker Container...'
-          docker rm -f ${{ env.IMAGE_NAME }}-${{ env.BRANCH_NAME }}
+          docker rm -f ${{ env.CT_NAME }}
 
           echo 'Running the Docker Container...'
           docker run -d \
-            --name ${{ env.IMAGE_NAME }}-${{ env.BRANCH_NAME }} \
+            --name ${{ env.CT_NAME }} \
             --restart always \
             --network nginx_default \
             -p ${{ env.PORT }}:${{ env.PORT }} \
