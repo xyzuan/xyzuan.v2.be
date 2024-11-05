@@ -3,7 +3,7 @@ import cors from "@elysiajs/cors";
 import { docs } from "@libs/swagger";
 import apiRoutes from "./api";
 
-const api = baseElysia()
+export const api = baseElysia()
   .use(
     cors({
       origin: ["xyzuan.my.id", "localhost:3000", "localhost"],

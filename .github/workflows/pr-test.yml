@@ -1,0 +1,48 @@
+name: Test Pull Request Build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Treaty Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize Bun Environment
+        uses: oven-sh/setup-bun@v2
+
+      - name: Declaring some Global Environment vars
+        run: |
+          echo "PORT=3121" >> $GITHUB_ENV
+          echo "DOMAIN=localhost" >> $GITHUB_ENV
+          echo "NODE_ENV=dev" >> $GITHUB_ENV
+          echo "PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }}" >> $GITHUB_ENV
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL_DEV }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "LINKEDIN_CLIENT_ID=${{ secrets.LINKEDIN_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "LINKEDIN_CLIENT_SECRET=${{ secrets.LINKEDIN_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
+          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
+          echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> $GITHUB_ENV
+          echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> $GITHUB_ENV
+          echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
+
+      - name: Run Treaty Tests
+        id: treaty_test
+        run: |
+          bun install
+          bunx prisma generate
+          bun test
+          echo "::set-output name=result::success"
+
+      - name: Mark as failed if tests fail
+        if: failure()
+        run: echo "::set-output name=result::failure"
