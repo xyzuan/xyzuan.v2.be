@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Run Treaty Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
 
       - name: Declaring some Global Environtment vars
         run: |
-          echo "PORT=3121" >> $GITHUB_ENV
+          echo "PORT=4031" >> $GITHUB_ENV
           echo "DOMAIN=localhost" >> $GITHUB_ENV
           echo "NODE_ENV=dev" >> $GITHUB_ENV
           echo "PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }}" >> $GITHUB_ENV
@@ -49,7 +49,7 @@ jobs:
 
   build:
     name: Build & Push to GHCR Registry
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test
     if: success()
     steps:
@@ -112,7 +112,7 @@ jobs:
 
   serve:
     name: Serve Images in Server
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     if: success()
     steps:
