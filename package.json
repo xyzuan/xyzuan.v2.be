@@ -13,7 +13,7 @@
     "@elysiajs/swagger": "^1.1.1",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/client": "5.19.1",
-    "arctic": "^1.9.2",
+    "arctic": "^2.0.0",
     "cloudinary": "^2.5.1",
     "elysia-rate-limit": "^4.1.0",
     "lucia": "^3.2.0",
