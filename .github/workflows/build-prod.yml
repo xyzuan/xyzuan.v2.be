@@ -87,7 +87,7 @@ jobs:
           --build-arg BASE_URL=${{ env.BASE_URL }} \
           --build-arg DOMAIN=${{ env.DOMAIN }} \
           --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
-          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
           --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
           --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
           --build-arg GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
