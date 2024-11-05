@@ -12,7 +12,11 @@ const google = new GoogleInstance(
 );
 
 const authUrl = (state: string, codeVerifier: string) =>
-  google.createAuthorizationURL(state, codeVerifier, ["profile", "email"]);
+  google.createAuthorizationURL(state, codeVerifier, [
+    "openid",
+    "profile",
+    "email",
+  ]);
 
 const getTokens = async (code: string, codeVerifier: string) =>
   google.validateAuthorizationCode(code, codeVerifier);

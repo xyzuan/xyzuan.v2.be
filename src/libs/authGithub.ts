@@ -4,12 +4,10 @@ import { GitHub as GithubInstance } from "arctic";
 const clientId = process.env.GITHUB_CLIENT_ID!;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET!;
 
-const github = new GithubInstance(clientId, clientSecret);
+const github = new GithubInstance(clientId, clientSecret, null);
 
-const authUrl = async (state: string) =>
-  await github.createAuthorizationURL(state, {
-    scopes: ["read:user", "user:email"],
-  });
+const authUrl = (state: string) =>
+  github.createAuthorizationURL(state, ["read:user", "user:email"]);
 
 const getTokens = async (code: string) =>
   github.validateAuthorizationCode(code);
