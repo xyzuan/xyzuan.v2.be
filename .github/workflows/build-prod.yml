@@ -16,10 +16,16 @@ jobs:
       - name: Settle up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Declaring some Global vars
+      - name: Declaring some Global Environtment vars
         run: |
-          BRANCH_NAME=${GITHUB_REF##*/}
-          SHA=$(echo "${{ github.sha }}" | head -c 7)
+          echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "SHA=$(echo "$GITHUB_SHA" | head -c 7)" >> $GITHUB_ENV
+          echo "ENV=production" >> $GITHUB_ENV
+          echo "PORT=3131" >> $GITHUB_ENV
+          echo "DOMAIN=xyzuan.my.id" >> $GITHUB_ENV
+          echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
+          echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
+          echo "DOCKERFILE=misc/Dockerfile.dev" >> $GITHUB_ENV
 
       - name: Authenticating to Eden Server realms.
         uses: webfactory/ssh-agent@v0.9.0
@@ -32,11 +38,11 @@ jobs:
       - name: Treaty Build the Docker image
         run: |
           docker build \
-          --build-arg PORT=3131 \
-          --build-arg NODE_ENV=production \
-          --build-arg DOMAIN=xyzuan.my.id \
+          --build-arg PORT=${{ env.PORT }} \
+          --build-arg NODE_ENV=${{ env.ENV }} \
+          --build-arg DOMAIN=${{ env.DOMAIN }} \
           --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
-          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} \
           --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
           --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
           --build-arg GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
@@ -48,17 +54,16 @@ jobs:
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
-          -t ghcr.io/xyzuan/xyzuan_api_v2:${BRANCH_NAME} -f misc/Dockerfile.prod .
+          -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
         run: |
-          IMAGE_NAME=ghcr.io/xyzuan/xyzuan_api_v2
-          docker tag $IMAGE_NAME:${BRANCH_NAME} $IMAGE_NAME:${SHA}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} ${{ env.IMAGE_NAME }}:${{env.SHA}}
 
       - name: Bring the Images to GHCR
         run: |
-          docker push ghcr.io/xyzuan/xyzuan_api_v2:${BRANCH_NAME}
-          docker push ghcr.io/xyzuan/xyzuan_api_v2:${SHA}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.SHA}}
 
       - name: Serving the Images in Eden Server realms.
         run: |
@@ -69,16 +74,16 @@ jobs:
           echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
 
           echo 'Pulling the latest image from GHCR...'
-          docker pull ghcr.io/xyzuan/xyzuan_api_v2:${BRANCH_NAME}
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
           echo 'Force Blowing the exist Docker Container...'
-          docker rm -f xyzuan-api-v2-{BRANCH_NAME}
+          docker rm -f ${{ env.IMAGE_NAME }}-${{ env.BRANCH_NAME }}
 
           echo 'Running the Docker Container...'
           docker run -d \
-            --name xyzuan-api-v2-${BRANCH_NAME} \
+            --name ${{ env.IMAGE_NAME }}-${{ env.BRANCH_NAME }} \
             --restart always \
             --network nginx_default \
-            -p 3131:3131 \
-            ghcr.io/xyzuan/xyzuan_api_v2:${BRANCH_NAME}
+            -p ${{ env.PORT }}:${{ env.PORT }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           EOF
