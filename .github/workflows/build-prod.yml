@@ -25,7 +25,7 @@ jobs:
           echo "DOMAIN=xyzuan.my.id" >> $GITHUB_ENV
           echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
           echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
-          echo "DOCKERFILE=misc/Dockerfile.dev" >> $GITHUB_ENV
+          echo "DOCKERFILE=misc/Dockerfile.prod" >> $GITHUB_ENV
 
       - name: Authenticating to Eden Server realms.
         uses: webfactory/ssh-agent@v0.9.0
@@ -58,7 +58,7 @@ jobs:
 
       - name: Adding tags to the Images
         run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} ${{ env.IMAGE_NAME }}:${{env.SHA}}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.SHA}}
 
       - name: Bring the Images to GHCR
         run: |
