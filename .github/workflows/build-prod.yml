@@ -1,0 +1,79 @@
+name: Build xyzuan-api-v2 Production Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Settle up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Authenticating to Eden Server realms.
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_PRIVATE_KEY }}
+
+      - name: Authenticating to GHCR realms
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
+
+      - name: Treaty Build the Docker image
+        run: |
+          docker build \
+          --build-arg PORT=3131 \
+          --build-arg NODE_ENV=production \
+          --build-arg DOMAIN=xyzuan.my.id \
+          --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+          --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+          --build-arg GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
+          --build-arg GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }} \
+          --build-arg LINKEDIN_CLIENT_ID=${{ secrets.LINKEDIN_CLIENT_ID }} \
+          --build-arg LINKEDIN_CLIENT_SECRET=${{ secrets.LINKEDIN_CLIENT_SECRET }} \
+          --build-arg TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} \
+          --build-arg TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} \
+          --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
+          --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
+          --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
+          -t ghcr.io/xyzuan/xyzuan_api_v2:{{ github.ref }} -f misc/Dockerfile.prod .
+
+      - name: Adding tags to the Images
+        run: |
+          IMAGE_NAME=ghcr.io/xyzuan/xyzuan_api_v2
+          docker tag $IMAGE_NAME:{{ github.ref }} $IMAGE_NAME:$(echo "${{ github.sha }}" | head -c 7)
+
+      - name: Bring the Images to GHCR
+        run: |
+          docker push ghcr.io/xyzuan/xyzuan_api_v2:{{ github.ref }}
+          docker push ghcr.io/xyzuan/xyzuan_api_v2:$(echo "${{ github.sha }}" | head -c 7)
+
+      - name: Serving the Images in Eden Server realms.
+        run: |
+          ssh-keyscan -t rsa ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          ssh ${{ github.actor }}@${{ secrets.SERVER_HOST }} << 'EOF'
+
+          echo 'Authenticating to GHCR realms...'
+          echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
+
+          echo 'Pulling the latest image from GHCR...'
+          docker pull ghcr.io/xyzuan/xyzuan_api_v2:{{ github.ref }}
+
+          echo 'Force Blowing the exist Docker Container...'
+          docker rm -f xyzuan-api-v2-{{ github.ref }}
+
+          echo 'Running the Docker Container...'
+          docker run -d \
+            --name xyzuan-api-v2-{{ github.ref }} \
+            --restart always \
+            --network nginx_default \
+            -p 3131:3131 \
+            ghcr.io/xyzuan/xyzuan_api_v2:{{ github.ref }}
+          EOF
