@@ -1,33 +1,6 @@
-FROM oven/bun AS build
+FROM oven/bun:slim AS build
 
 WORKDIR /app
-
-COPY package.json bun.lockb tsconfig.json ./
-RUN \
-  if [ -f bun.lockb ]; then bun install --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
-
-COPY ./src ./src
-COPY ./prisma ./prisma
-
-RUN bun install
-RUN bunx prisma generate
-RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-	--target bun \
-	--outfile server \
-	./src/index.ts
-
-FROM gcr.io/distroless/cc
-
-WORKDIR /app
-
-COPY --from=build /app/server server
-COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
-COPY --from=build /app/node_modules/@prisma /app/node_modules/@prisma
 
 ARG PORT
 ARG NODE_ENV
@@ -49,6 +22,15 @@ ARG CLOUDINARY_CLOUD_NAME
 ARG CLOUDINARY_API_KEY
 ARG CLOUDINARY_API_SECRET
 
+COPY package.json bun.lockb tsconfig.json ./
+RUN \
+  if [ -f bun.lockb ]; then bun install --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+COPY ./src ./src
+COPY ./prisma ./prisma
+
 ENV PORT=$PORT
 ENV NODE_ENV=$NODE_ENV
 ENV BASE_URL=$BASE_URL
@@ -69,7 +51,41 @@ ENV CLOUDINARY_CLOUD_NAME=$CLOUDINARY_CLOUD_NAME
 ENV CLOUDINARY_API_KEY=$CLOUDINARY_API_KEY
 ENV CLOUDINARY_API_SECRET=$CLOUDINARY_API_SECRET
 
-EXPOSE 3121
+RUN bunx prisma generate
+RUN bun build \
+	--compile \
+	--minify-whitespace \
+	--minify-syntax \
+	--target bun \
+	--outfile server \
+	./src/index.ts
+
+FROM gcr.io/distroless/cc
+
+WORKDIR /app
+
+COPY --from=build /app/server server
+COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=build /app/node_modules/@prisma /app/node_modules/@prisma
+
+ENV PORT=$PORT
+ENV NODE_ENV=$NODE_ENV
+ENV BASE_URL=$BASE_URL
+ENV DOMAIN=$DOMAIN
+ENV PASSWORD_PEPPER=$PASSWORD_PEPPER
+ENV DATABASE_URL=$DATABASE_URL
+
+ENV GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+ENV GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+ENV GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID
+ENV GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET
+ENV LINKEDIN_CLIENT_ID=$LINKEDIN_CLIENT_ID
+ENV LINKEDIN_CLIENT_SECRET=$LINKEDIN_CLIENT_SECRET
+ENV TELEGRAM_TOKEN=$TELEGRAM_TOKEN
+ENV TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID
+
+ENV CLOUDINARY_CLOUD_NAME=$CLOUDINARY_CLOUD_NAME
+ENV CLOUDINARY_API_KEY=$CLOUDINARY_API_KEY
+ENV CLOUDINARY_API_SECRET=$CLOUDINARY_API_SECRET
 
 CMD ["./server"]
-
