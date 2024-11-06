@@ -3,6 +3,7 @@ import { t } from "elysia";
 import { createElysia } from "@libs/elysia";
 import { authGuard } from "@libs/authGuard";
 import { prismaClient } from "@libs/prismaDatabase";
+import { ForbiddenException } from "@constants/exceptions";
 
 export const WorkController = createElysia()
   .model({
@@ -56,7 +57,9 @@ export const WorkController = createElysia()
   .use(authGuard)
   .post(
     "/",
-    async ({ body }) => {
+    async ({ body, user }) => {
+      if (!user.isAdmin) throw new ForbiddenException();
+
       return await prismaClient.work.create({
         data: {
           ...body,
