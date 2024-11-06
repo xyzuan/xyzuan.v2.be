@@ -3,7 +3,7 @@ import { t } from "elysia";
 import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
-import { BadRequestException } from "@constants/exceptions";
+import { BadRequestException, ForbiddenException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
 import slugify from "@utils/slugUtils";
 
@@ -146,7 +146,8 @@ export const BlogController = createElysia()
   .use(rateLimit())
   .post(
     "/",
-    async ({ body }) => {
+    async ({ body, user }) => {
+      if (!user.isAdmin) throw new ForbiddenException();
       return {
         status: 200,
         data: await prismaClient.blog.create({

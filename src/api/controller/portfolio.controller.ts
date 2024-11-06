@@ -3,6 +3,7 @@ import { t } from "elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { createElysia } from "@libs/elysia";
 import { authGuard } from "@libs/authGuard";
+import { ForbiddenException } from "@constants/exceptions";
 
 export const PortfolioController = createElysia()
   .model({
@@ -63,7 +64,9 @@ export const PortfolioController = createElysia()
   .use(authGuard)
   .post(
     "/",
-    async ({ body }) => {
+    async ({ body, user }) => {
+      if (!user.isAdmin) throw new ForbiddenException();
+
       return await prismaClient.portfolio.create({
         data: {
           ...body,
