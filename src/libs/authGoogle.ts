@@ -3,7 +3,7 @@ import { Google as GoogleInstance } from "arctic";
 
 const clientId = process.env.GOOGLE_CLIENT_ID!;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
-const baseURL = process.env.BASE_URL ?? "http://localhost:3031";
+const baseURL = process.env.BASE_URL ?? "http://localhost:3121";
 
 const google = new GoogleInstance(
   clientId,
@@ -11,10 +11,12 @@ const google = new GoogleInstance(
   `${baseURL}/v2/auth/google/callback`
 );
 
-const authUrl = async (state: string, codeVerifier: string) =>
-  await google.createAuthorizationURL(state, codeVerifier, {
-    scopes: ["profile", "email"],
-  });
+const authUrl = (state: string, codeVerifier: string) =>
+  google.createAuthorizationURL(state, codeVerifier, [
+    "openid",
+    "profile",
+    "email",
+  ]);
 
 const getTokens = async (code: string, codeVerifier: string) =>
   google.validateAuthorizationCode(code, codeVerifier);

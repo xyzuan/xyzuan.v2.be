@@ -11,7 +11,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Initialize Bun Environtment
         uses: oven-sh/setup-bun@v2
@@ -54,10 +54,10 @@ jobs:
     if: success()
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Settle up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Declaring some Global Environtment vars
         run: |
@@ -87,7 +87,7 @@ jobs:
           --build-arg BASE_URL=${{ env.BASE_URL }} \
           --build-arg DOMAIN=${{ env.DOMAIN }} \
           --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
-          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
           --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
           --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
           --build-arg GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \

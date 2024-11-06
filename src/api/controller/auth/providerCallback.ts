@@ -34,7 +34,7 @@ const providerCallback = createElysia().get(
     try {
       const userId = generateId(15);
       const tokens = await getTokens(provider, code, storedCodeVerifier);
-      const account = await getAuthAccount(provider, tokens.accessToken);
+      const account = await getAuthAccount(provider, tokens.accessToken());
 
       const existingUser = await prismaClient.user.findUnique({
         where: {
