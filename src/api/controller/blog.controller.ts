@@ -5,6 +5,7 @@ import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
+import slugify from "@utils/slugUtils";
 
 export const BlogController = createElysia()
   .model({
@@ -148,7 +149,12 @@ export const BlogController = createElysia()
     async ({ body }) => {
       return {
         status: 200,
-        data: await prismaClient.blog.create({ data: { ...body } }),
+        data: await prismaClient.blog.create({
+          data: {
+            ...body,
+            slug: slugify(body.title),
+          },
+        }),
       };
     },
     {
