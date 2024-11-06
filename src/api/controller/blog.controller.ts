@@ -11,6 +11,7 @@ export const BlogController = createElysia()
     "blog.model": t.Object({
       img: t.String(),
       title: t.String(),
+      slug: t.String(),
       description: t.String(),
       content: t.String(),
       tags: t.Optional(t.String()),
@@ -61,11 +62,11 @@ export const BlogController = createElysia()
     }
   )
   .get(
-    "/:id",
-    async ({ params: { id } }) => {
+    "/:slug",
+    async ({ params: { slug } }) => {
       const blog = await prismaClient.blog.findUnique({
         where: {
-          id: parseInt(id),
+          slug: slug,
         },
         include: {
           reactions: {

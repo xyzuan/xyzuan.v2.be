@@ -76,6 +76,7 @@ model Blog {
   id              Int          @id @default(autoincrement())
   img             String
   title           String
+  slug            String       @unique
   description     String       @db.Text
   content         String       @db.Text
   tags            String?      @db.Text
