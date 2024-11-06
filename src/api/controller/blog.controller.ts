@@ -5,12 +5,14 @@ import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
+import slugify from "@utils/slugUtils";
 
 export const BlogController = createElysia()
   .model({
     "blog.model": t.Object({
       img: t.String(),
       title: t.String(),
+      slug: t.String(),
       description: t.String(),
       content: t.String(),
       tags: t.Optional(t.String()),
@@ -61,11 +63,11 @@ export const BlogController = createElysia()
     }
   )
   .get(
-    "/:id",
-    async ({ params: { id } }) => {
+    "/:slug",
+    async ({ params: { slug } }) => {
       const blog = await prismaClient.blog.findUnique({
         where: {
-          id: parseInt(id),
+          slug: slug,
         },
         include: {
           reactions: {
@@ -147,7 +149,12 @@ export const BlogController = createElysia()
     async ({ body }) => {
       return {
         status: 200,
-        data: await prismaClient.blog.create({ data: { ...body } }),
+        data: await prismaClient.blog.create({
+          data: {
+            ...body,
+            slug: slugify(body.title),
+          },
+        }),
       };
     },
     {
