@@ -34,6 +34,8 @@ jobs:
           echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> $GITHUB_ENV
           echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> $GITHUB_ENV
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
+          echo "AZURE_AI_URL=${{ secrets.AZURE_AI_URL }}" >> $GITHUB_ENV
+          echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
 
       - name: Run Treaty Tests
         id: treaty_test
@@ -99,6 +101,8 @@ jobs:
           --build-arg CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }} \
           --build-arg CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }} \
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
+          --build-arg AZURE_AI_URL=${{ secrets.AZURE_AI_URL }} \
+          --build-arg AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }} \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
