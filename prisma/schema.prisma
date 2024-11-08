@@ -43,6 +43,7 @@ model User {
   messages       Message[]
   blogReaction   BlogReaction[]
   blogComment    BlogComment[]
+  aiChat         AIChat[]
 }
 
 model Session {
@@ -60,49 +61,67 @@ model PasswordResetToken {
 }
 
 model Message {
-  id              String    @id @default(cuid())
-  mentionedToId   String?
-  message         String
-  createdAt       DateTime  @default(now()) @map("created_at")
-  isShow          Boolean?  @default(true) @map("is_show")
-  user            User      @relation(fields: [userId], references: [id])
-  userId          String
+  id            String   @id @default(cuid())
+  mentionedToId String?
+  message       String
+  createdAt     DateTime @default(now()) @map("created_at")
+  isShow        Boolean? @default(true) @map("is_show")
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
 
-  mentionedTo     Message?  @relation("MessageMentions", fields: [mentionedToId], references: [id])
-  mentionedBy     Message[] @relation("MessageMentions")
+  mentionedTo Message?  @relation("MessageMentions", fields: [mentionedToId], references: [id])
+  mentionedBy Message[] @relation("MessageMentions")
+}
+
+model AIChat {
+  id        String          @id @default(cuid())
+  userId    String
+  chatTitle String
+  messages  AIChatMessage[]
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User            @relation(fields: [userId], references: [id])
+}
+
+model AIChatMessage {
+  id        String   @id @default(cuid())
+  msg       String
+  role      String
+  createdAt DateTime @default(now()) @map("created_at")
+  AIChat    AIChat?  @relation(fields: [aIChatId], references: [id])
+  aIChatId  String?
 }
 
 model Blog {
-  id              Int          @id @default(autoincrement())
-  img             String
-  title           String
-  slug            String       @unique
-  description     String       @db.Text
-  content         String       @db.Text
-  tags            String?      @db.Text
-  viewCount       Int          @default(0)
-  createdAt       DateTime     @default(now())
-  comments        BlogComment[]
-  reactions       BlogReaction[]
+  id          Int            @id @default(autoincrement())
+  img         String
+  title       String
+  slug        String         @unique
+  description String         @db.Text
+  content     String         @db.Text
+  tags        String?        @db.Text
+  viewCount   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  comments    BlogComment[]
+  reactions   BlogReaction[]
 }
 
 model BlogComment {
-  id          Int      @id @default(autoincrement())
-  userId      String
-  blogId      Int
-  content     String
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
-  blog        Blog     @relation(fields: [blogId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    String
+  blogId    Int
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  blog      Blog     @relation(fields: [blogId], references: [id])
 }
 
 model BlogReaction {
-  id          Int      @id @default(autoincrement())
-  userId      String
-  blogId      Int
-  type        BlogReactionType   
-  blog        Blog     @relation(fields: [blogId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
+  id     Int              @id @default(autoincrement())
+  userId String
+  blogId Int
+  type   BlogReactionType
+  blog   Blog             @relation(fields: [blogId], references: [id])
+  user   User             @relation(fields: [userId], references: [id])
 }
 
 enum BlogReactionType {
@@ -115,46 +134,46 @@ enum BlogReactionType {
 }
 
 model Portfolio {
-  id              Int                                  @id @default(autoincrement())
-  img             String
-  title           String
-  description     String?                              @db.Text
-  content         String?                              @db.Text
-  href            String?
-  projectLink     String?
-  isFeatured      Boolean                              @default(false)
-  stacks          PortfolioStack[]
-  createdAt       DateTime                             @default(now())
+  id          Int              @id @default(autoincrement())
+  img         String
+  title       String
+  description String?          @db.Text
+  content     String?          @db.Text
+  href        String?
+  projectLink String?
+  isFeatured  Boolean          @default(false)
+  stacks      PortfolioStack[]
+  createdAt   DateTime         @default(now())
 }
 
 model PortfolioStack {
-  id              Int                                 @id @default(autoincrement())
-  description     String
-  stackId         Int
-  portfolio       Portfolio                           @relation(fields: [stackId], references: [id], onDelete: Cascade)
+  id          Int       @id @default(autoincrement())
+  description String
+  stackId     Int
+  portfolio   Portfolio @relation(fields: [stackId], references: [id], onDelete: Cascade)
 }
 
 model Education {
-  id              Int                                  @id @default(autoincrement())
-  instance        String
-  address         String
-  date            String
+  id       Int    @id @default(autoincrement())
+  instance String
+  address  String
+  date     String
 }
 
 model Work {
-  id              Int                                 @id @default(autoincrement())
-  logo            String
-  jobTitle        String
-  instance        String
-  instanceLink    String
-  address         String
-  date            String
+  id               Int                  @id @default(autoincrement())
+  logo             String
+  jobTitle         String
+  instance         String
+  instanceLink     String
+  address          String
+  date             String
   responsibilities WorkResponsibility[]
 }
 
 model WorkResponsibility {
-  id              Int                                 @id @default(autoincrement())
-  description     String
-  workId          Int
-  work            Work                                @relation(fields: [workId], references: [id], onDelete: Cascade)
+  id          Int    @id @default(autoincrement())
+  description String
+  workId      Int
+  work        Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
 }
