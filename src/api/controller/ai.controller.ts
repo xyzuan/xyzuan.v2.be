@@ -48,6 +48,7 @@ export const AIController = createElysia()
           userId: user.id,
         },
         select: {
+          chatTitle: true,
           messages: true,
         },
       });
