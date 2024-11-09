@@ -103,7 +103,6 @@ export const AIController = createElysia()
               content: msg,
             },
           ],
-          max_tokens: 100,
         }),
       }).then(async (response) => await response.json());
 
