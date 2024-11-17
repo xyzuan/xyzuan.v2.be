@@ -10,7 +10,7 @@ import { OAuth2RequestError } from "arctic";
 import { t } from "elysia";
 import { generateId } from "lucia";
 
-const providerCallback = createElysia().get(
+export default createElysia().get(
   "/:provider/callback",
   async ({
     query: { code, state },
@@ -18,7 +18,7 @@ const providerCallback = createElysia().get(
     params: { provider },
     set,
     env: { DOMAIN },
-    log,
+    logestic,
   }) => {
     const { oauth_state, oauth_code_verifier, oauth_next } = cookie;
     const next = oauth_next?.value ?? "/";
@@ -62,7 +62,7 @@ const providerCallback = createElysia().get(
             },
           })
           .catch((error) => {
-            log.error(error);
+            logestic.error(error);
             throw new InternalServerErrorException();
           });
       }
@@ -77,7 +77,7 @@ const providerCallback = createElysia().get(
             },
           })
           .catch((error) => {
-            log.error(error);
+            logestic.error(error);
             throw new InternalServerErrorException();
           });
       }
@@ -95,7 +95,7 @@ const providerCallback = createElysia().get(
       });
       set.redirect = next;
     } catch (error) {
-      log.error(error);
+      logestic.error(error as string);
       if (error instanceof OAuth2RequestError) {
         throw new BadRequestException();
       }
@@ -103,6 +103,9 @@ const providerCallback = createElysia().get(
     }
   },
   {
+    detail: {
+      tags: ["Authorization Service"],
+    },
     query: t.Object(
       {
         code: t.String(),
@@ -119,5 +122,3 @@ const providerCallback = createElysia().get(
     }),
   }
 );
-
-export { providerCallback };

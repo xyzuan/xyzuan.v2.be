@@ -1,9 +1,9 @@
-import { BaseAuthAccountInfo } from "@t/auth.types";
+import { BaseAuthAccountInfo } from "@t/auth";
 import { LinkedIn as LinkedinInstance } from "arctic";
 
-const clientId = process.env.LINKEDIN_CLIENT_ID!;
-const clientSecret = process.env.LINKEDIN_CLIENT_SECRET!;
-const baseURL = process.env.BASE_URL ?? "http://localhost:3121";
+const clientId = Bun.env.LINKEDIN_CLIENT_ID!;
+const clientSecret = Bun.env.LINKEDIN_CLIENT_SECRET!;
+const baseURL = Bun.env.BASE_URL ?? "http://localhost:3121";
 
 const linkedin = new LinkedinInstance(
   clientId,

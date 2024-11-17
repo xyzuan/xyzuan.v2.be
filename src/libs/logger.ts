@@ -1,7 +1,3 @@
-import { fileLogger, logger as pinoLogger } from "@bogeychan/elysia-logger";
+import { Logestic } from "logestic";
 
-const logger = fileLogger({
-  file: "./my.log",
-});
-
-export { logger };
+export default Logestic.preset("fancy");

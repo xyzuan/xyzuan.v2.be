@@ -12,7 +12,7 @@ export const api = baseElysia()
   )
   .use(docs)
   .use(apiRoutes)
-  .listen(process.env.PORT || 3031);
+  .listen(Bun.env.PORT || 3031);
 
 console.log(
   `🦊 xyzuanV2 APIs is running at ${api.server?.hostname}:${api.server?.port}`

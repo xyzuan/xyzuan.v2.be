@@ -3,7 +3,7 @@ import { genAuthUrl } from "@utils/authUtils";
 import { generateCodeVerifier, generateState } from "arctic";
 import { t } from "elysia";
 
-const provider = createElysia().get(
+export default createElysia().get(
   "/:provider",
   async ({
     params: { provider },
@@ -15,7 +15,7 @@ const provider = createElysia().get(
     const state = generateState();
     const codeVerifier = generateCodeVerifier();
 
-    const redirectUrl = await genAuthUrl(provider, state, codeVerifier);
+    const redirectUrl = genAuthUrl(provider, state, codeVerifier);
 
     oauth_state?.set({
       value: state,
@@ -47,6 +47,9 @@ const provider = createElysia().get(
     set.redirect = redirectUrl.toString();
   },
   {
+    detail: {
+      tags: ["Authorization Service"],
+    },
     query: t.Object({
       next: t.Optional(t.String()),
     }),
@@ -59,5 +62,3 @@ const provider = createElysia().get(
     }),
   }
 );
-
-export { provider };
