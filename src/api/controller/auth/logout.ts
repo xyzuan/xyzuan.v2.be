@@ -2,7 +2,7 @@ import { BadRequestException } from "@constants/exceptions";
 import { createElysia } from "@libs/elysia";
 import { lucia } from "@libs/luciaAuth";
 
-const logout = createElysia().post(
+export default createElysia().post(
   "/logout",
   async ({ cookie, env: { DOMAIN } }) => {
     const sessionCookie = cookie[lucia.sessionCookieName];
@@ -25,5 +25,3 @@ const logout = createElysia().post(
     },
   }
 );
-
-export { logout };

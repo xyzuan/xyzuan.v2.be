@@ -12,7 +12,6 @@ import {
   ServiceUnavailableException,
   UnauthorizedException,
 } from "@constants/exceptions";
-import { createElysia } from "@libs/elysia";
 import { logger } from "@libs/logger";
 
 /**

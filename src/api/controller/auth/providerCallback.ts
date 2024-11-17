@@ -10,7 +10,7 @@ import { OAuth2RequestError } from "arctic";
 import { t } from "elysia";
 import { generateId } from "lucia";
 
-const providerCallback = createElysia().get(
+export default createElysia().get(
   "/:provider/callback",
   async ({
     query: { code, state },
@@ -103,6 +103,9 @@ const providerCallback = createElysia().get(
     }
   },
   {
+    detail: {
+      tags: ["Authorization Service"],
+    },
     query: t.Object(
       {
         code: t.String(),
@@ -119,5 +122,3 @@ const providerCallback = createElysia().get(
     }),
   }
 );
-
-export { providerCallback };

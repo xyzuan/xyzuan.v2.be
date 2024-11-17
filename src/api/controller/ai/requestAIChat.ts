@@ -1,69 +1,12 @@
-import { t } from "elysia";
-
-import { createElysia } from "@libs/elysia";
 import { authGuard } from "@libs/authGuard";
-import { ChatCompletionResponse, Message } from "@t/ai.types";
+import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
+import { ChatCompletionResponse, Message } from "@t/ai";
+import aiModel from "@models/ai.model";
 
-export const AIController = createElysia()
-  .model({
-    "ai.req.model": t.Object({
-      msg: t.String(),
-      aiChatId: t.Optional(t.String()),
-    }),
-  })
+export default createElysia()
+  .use(aiModel)
   .use(authGuard)
-  .get(
-    "/",
-    async ({ user }) => {
-      const aiChats = await prismaClient.aIChat.findMany({
-        where: {
-          userId: user.id,
-        },
-        select: {
-          userId: false,
-          chatTitle: true,
-          id: true,
-          createdAt: true,
-        },
-      });
-
-      return {
-        status: 200,
-        data: aiChats,
-      };
-    },
-    {
-      detail: {
-        tags: ["AI"],
-      },
-    }
-  )
-  .get(
-    "/:id",
-    async ({ params: { id }, user }) => {
-      const aiChat = await prismaClient.aIChat.findUnique({
-        where: {
-          id,
-          userId: user.id,
-        },
-        select: {
-          chatTitle: true,
-          messages: true,
-        },
-      });
-
-      return {
-        status: 200,
-        data: aiChat,
-      };
-    },
-    {
-      detail: {
-        tags: ["AI"],
-      },
-    }
-  )
   .post(
     "/",
     async ({ body, user, env }) => {
@@ -158,7 +101,7 @@ export const AIController = createElysia()
     {
       body: "ai.req.model",
       detail: {
-        tags: ["AI"],
+        tags: ["Tidy AI"],
       },
     }
   );

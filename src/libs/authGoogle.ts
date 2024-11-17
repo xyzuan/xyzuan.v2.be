@@ -1,4 +1,4 @@
-import { BaseAuthAccountInfo, openIdConnectUserInfo } from "@t/auth.types";
+import { BaseAuthAccountInfo, openIdConnectUserInfo } from "@t/auth";
 import { Google as GoogleInstance } from "arctic";
 
 const clientId = process.env.GOOGLE_CLIENT_ID!;

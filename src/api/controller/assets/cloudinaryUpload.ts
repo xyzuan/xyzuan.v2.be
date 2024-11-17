@@ -1,10 +1,10 @@
-import { t } from "elysia";
-
 import { authGuard } from "@libs/authGuard";
 import { cloudinary } from "@libs/cloudinary";
 import { createElysia } from "@libs/elysia";
+import cloudinaryModel from "@models/cloudinary.model";
 
-export const CloudinaryController = createElysia()
+export default createElysia()
+  .use(cloudinaryModel)
   .use(authGuard)
   .post(
     "/upload",
@@ -20,9 +20,7 @@ export const CloudinaryController = createElysia()
       };
     },
     {
-      body: t.Object({
-        image: t.String(),
-      }),
+      body: "cloudinary.model",
       tags: ["Assets", "Cloudinary"],
     }
   );

@@ -14,7 +14,7 @@ import {
   getLinkedinTokens,
   linkedinAuthUrl,
 } from "@libs/authLinkedin";
-import { AuthProvider } from "@t/auth.types";
+import { AuthProvider } from "@t/auth";
 
 const genAuthUrl = (
   provider: AuthProvider,

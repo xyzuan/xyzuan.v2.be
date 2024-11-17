@@ -1,4 +1,4 @@
-import { BaseAuthAccountInfo } from "@t/auth.types";
+import { BaseAuthAccountInfo } from "@t/auth";
 import { GitHub as GithubInstance } from "arctic";
 
 const clientId = process.env.GITHUB_CLIENT_ID!;

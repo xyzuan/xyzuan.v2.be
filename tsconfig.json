@@ -32,6 +32,7 @@
     "paths": {
       "@constants/*": ["./src/constants/*"],
       "@api/*": ["./src/api/*"],
+      "@models/*": ["./src/models/*"],
       "@controller/*": ["./src/api/controller/*"],
       "@utils/*": ["./src/utils/*"],
       "@libs/*": ["./src/libs/*"],

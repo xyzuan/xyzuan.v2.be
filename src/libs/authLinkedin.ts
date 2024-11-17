@@ -1,4 +1,4 @@
-import { BaseAuthAccountInfo } from "@t/auth.types";
+import { BaseAuthAccountInfo } from "@t/auth";
 import { LinkedIn as LinkedinInstance } from "arctic";
 
 const clientId = process.env.LINKEDIN_CLIENT_ID!;
