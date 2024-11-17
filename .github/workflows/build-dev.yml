@@ -36,6 +36,8 @@ jobs:
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
           echo "AZURE_AI_URL=${{ secrets.AZURE_AI_URL }}" >> $GITHUB_ENV
           echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
+          echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
+          echo "AXIOM_DATASET=${{ secrets.AXIOM_DATASET }}" >> $GITHUB_ENV
 
       - name: Run Treaty Tests
         id: treaty_test
@@ -103,6 +105,8 @@ jobs:
           --build-arg CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }} \
           --build-arg AZURE_AI_URL=${{ secrets.AZURE_AI_URL }} \
           --build-arg AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }} \
+          --build-arg AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }} \
+          --build-arg AXIOM_DATASET=${{ secrets.AXIOM_DATASET }} \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
