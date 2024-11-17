@@ -1,8 +1,8 @@
 import { BaseAuthAccountInfo } from "@t/auth";
 import { GitHub as GithubInstance } from "arctic";
 
-const clientId = process.env.GITHUB_CLIENT_ID!;
-const clientSecret = process.env.GITHUB_CLIENT_SECRET!;
+const clientId = Bun.env.GITHUB_CLIENT_ID!;
+const clientSecret = Bun.env.GITHUB_CLIENT_SECRET!;
 
 const github = new GithubInstance(clientId, clientSecret, null);
 
