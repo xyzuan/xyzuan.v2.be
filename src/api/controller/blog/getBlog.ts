@@ -3,10 +3,11 @@ import { prismaClient } from "@libs/prismaDatabase";
 
 export default createElysia().get(
   "/",
-  async () => {
-    return {
-      status: 200,
-      data: await prismaClient.blog
+  async ({ redis }) => {
+    let blogData;
+    const redisBlogData = await redis.get("blog.all");
+    if (!redisBlogData) {
+      const getAllBlog = await prismaClient.blog
         .findMany({
           include: {
             comments: true,
@@ -22,7 +23,16 @@ export default createElysia().get(
             commentsCount: blog.comments.length,
             reactionsCount: blog.reactions.length,
           }))
-        ),
+        );
+      blogData = getAllBlog;
+      await redis.set("blog.all", JSON.stringify(getAllBlog), 1440);
+    } else {
+      blogData = JSON.parse(redisBlogData);
+    }
+
+    return {
+      status: 200,
+      data: blogData,
     };
   },
   {

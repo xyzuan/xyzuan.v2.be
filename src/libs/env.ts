@@ -20,6 +20,7 @@ const envValidateScheme = z.object({
   AZURE_AI_API_KEY: z.string(),
   AXIOM_SECRET_TOKEN: z.string(),
   AXIOM_DATASET: z.string(),
+  REDIS_URL: z.string(),
 });
 
 const env = () => {
