@@ -12,7 +12,7 @@ import {
   ServiceUnavailableException,
   UnauthorizedException,
 } from "@constants/exceptions";
-import { logger } from "@libs/logger";
+import logger from "@libs/logger";
 
 /**
  * 400 - Bad Request
@@ -65,27 +65,21 @@ const error = new Elysia()
     UnauthorizedException,
   })
   .onError({ as: "global" }, (ctx) => {
-    const { code, error, log } = ctx;
+    const { code, error, logestic } = ctx;
 
     switch (code) {
       case "NOT_FOUND":
         return new NotFoundException();
       case "INTERNAL_SERVER_ERROR":
-        if (log) {
-          log.error({
-            code,
-            error,
-          });
+        if (logestic) {
+          logestic.error(JSON.stringify({ code, error }));
         } else {
           console.error("Log is undefined. Error: ", { code, error });
         }
         return new InternalServerErrorException();
       default:
-        if (log) {
-          log.error({
-            code,
-            error,
-          });
+        if (logestic) {
+          logestic.error(JSON.stringify({ code, error }));
         } else {
           console.error("Log is undefined. Error: ", { code, error });
         }

@@ -1,7 +1,7 @@
 import { env } from "@libs/env";
-import { logger } from "@libs/logger";
 import { error } from "@utils/errorHandler";
 import { Elysia, type ElysiaConfig } from "elysia";
+import logger from "./logger";
 
 const baseElysia = <
   const BasePath extends string = "",

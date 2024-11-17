@@ -18,7 +18,7 @@ export default createElysia().get(
     params: { provider },
     set,
     env: { DOMAIN },
-    log,
+    logestic,
   }) => {
     const { oauth_state, oauth_code_verifier, oauth_next } = cookie;
     const next = oauth_next?.value ?? "/";
@@ -62,7 +62,7 @@ export default createElysia().get(
             },
           })
           .catch((error) => {
-            log.error(error);
+            logestic.error(error);
             throw new InternalServerErrorException();
           });
       }
@@ -77,7 +77,7 @@ export default createElysia().get(
             },
           })
           .catch((error) => {
-            log.error(error);
+            logestic.error(error);
             throw new InternalServerErrorException();
           });
       }
@@ -95,7 +95,7 @@ export default createElysia().get(
       });
       set.redirect = next;
     } catch (error) {
-      log.error(error);
+      logestic.error(error as string);
       if (error instanceof OAuth2RequestError) {
         throw new BadRequestException();
       }

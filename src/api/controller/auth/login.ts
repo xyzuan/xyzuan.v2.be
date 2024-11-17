@@ -13,7 +13,7 @@ export default createElysia()
       body: { email, password },
       cookie,
       set,
-      log,
+      logestic,
       env: { DOMAIN, PASSWORD_PEPPER },
     }) => {
       const user = await prismaClient.user.findUnique({
@@ -23,26 +23,26 @@ export default createElysia()
       });
 
       if (!user || !user.passwordSalt || !user.hashedPassword) {
-        log.error("User not found.");
+        logestic.error("User not found.");
         throw new BadRequestException("User not found.");
       }
 
       const passwordPepper = PASSWORD_PEPPER;
 
       if (!passwordPepper) {
-        log.error("Password pepper is not set.");
+        logestic.error("Password pepper is not set.");
         throw new Error("Password pepper is not set.");
       }
 
       if (!user || !user.passwordSalt || !user.hashedPassword) {
-        log.error("User data is missing or incomplete.");
+        logestic.error("User data is missing or incomplete.");
       } else if (
         !(await bunPassword.verify(
           user.passwordSalt + password + passwordPepper,
           user.hashedPassword
         ))
       ) {
-        log.error("Password is invalid.");
+        logestic.error("Password is invalid.");
         throw new BadRequestException("Password is invalid.");
       } else {
         try {

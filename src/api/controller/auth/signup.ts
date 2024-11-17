@@ -18,7 +18,7 @@ export default createElysia()
       body: { email, password, name },
       cookie,
       set,
-      log,
+      logestic,
       env: { DOMAIN, PASSWORD_PEPPER: passwordPepper },
     }) => {
       const existingUser = await prismaClient.user.findUnique({
@@ -28,7 +28,7 @@ export default createElysia()
       });
 
       if (existingUser) {
-        log.error("User already exists.");
+        logestic.error("User already exists.");
         throw new ConflictException("User already exists.");
       }
 
@@ -64,7 +64,7 @@ export default createElysia()
 
         return newUser;
       } catch (error) {
-        log.error(error);
+        logestic.error(error as string);
         throw new InternalServerErrorException();
       }
     },
