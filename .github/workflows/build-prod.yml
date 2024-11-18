@@ -52,10 +52,24 @@ jobs:
         if: failure()
         run: echo "::set-output name=result::failure"
 
+  sonarqube:
+    name: Run Code Quality Check
+    runs-on: self-hosted
+    needs: test
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: "Check code with SonarQube"
+        uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
   build:
     name: Build & Push to GHCR Registry
     runs-on: self-hosted
-    needs: test
+    needs: sonarqube
     if: success()
     steps:
       - name: Checkout code
