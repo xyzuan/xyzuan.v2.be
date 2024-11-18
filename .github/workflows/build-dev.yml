@@ -72,6 +72,19 @@ jobs:
     needs: sonarqube
     if: success()
     steps:
+      - name: Send Telegram Message on Build
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} triggered build:
+            Last Commit message: ${{ github.event.commits[0].message }}
+
+            Repository: ${{ github.repository }}
+
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -176,3 +189,15 @@ jobs:
             -p ${{ env.PORT }}:${{ env.PORT }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           EOF
+      - name: Send Telegram Message Success Build
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Build Success,
+            Last Commit message: ${{ github.event.commits[0].message }}
+
+            Repository: ${{ github.repository }}
+
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
