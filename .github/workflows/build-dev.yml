@@ -108,7 +108,7 @@ jobs:
           --build-arg AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }} \
           --build-arg AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }} \
           --build-arg AXIOM_DATASET=${{ secrets.AXIOM_DATASET }} \
-          --build-arg REDIS_URL=${{ secrets.REDIS_URL }} \
+          --build-arg REDIS_URL="redis://xyzuan-redis.nginx_default:6379" \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
