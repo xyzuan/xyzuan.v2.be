@@ -21,7 +21,6 @@
     "lucia": "^3.2.0",
     "node-telegram-bot-api": "^0.66.0",
     "redis": "^4.7.0",
-    "redis-om": "^0.4.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
