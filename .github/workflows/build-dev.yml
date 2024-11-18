@@ -38,6 +38,7 @@ jobs:
           echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
           echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
           echo "AXIOM_DATASET=${{ secrets.AXIOM_DATASET }}" >> $GITHUB_ENV
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> $GITHUB_ENV
 
       - name: Run Treaty Tests
         id: treaty_test
@@ -107,6 +108,7 @@ jobs:
           --build-arg AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }} \
           --build-arg AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }} \
           --build-arg AXIOM_DATASET=${{ secrets.AXIOM_DATASET }} \
+          --build-arg REDIS_URL=${{ secrets.REDIS_URL_INTERNAL }} \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
@@ -116,7 +118,7 @@ jobs:
       - name: Bring the Images to GHCR
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.SHA}}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.SHA }}
 
   serve:
     name: Serve Images in Server
@@ -147,14 +149,15 @@ jobs:
           echo 'Pulling the latest image from GHCR...'
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
-          echo 'Force Blowing the existing Docker Container...'
-          docker rm -f ${{ env.CT_NAME }}
+          echo 'Force Blowing the existing Docker Swarm Service...'
+          docker service rm ${{ env.CT_NAME }}
 
-          echo 'Running the Docker Container...'
-          docker run -d \
+          echo 'Creating the Docker Swarm Service...'
+          docker service create \
             --name ${{ env.CT_NAME }} \
-            --restart always \
-            --network nginx_default \
+            --replicas 6 \
+            --restart-condition any \
+            --network nginx_swarm \
             -p ${{ env.PORT }}:${{ env.PORT }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           EOF

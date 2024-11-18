@@ -38,6 +38,7 @@ jobs:
           echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
           echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
           echo "AXIOM_DATASET=${{ secrets.AXIOM_DATASET }}" >> $GITHUB_ENV
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> $GITHUB_ENV
 
       - name: Run Treaty Tests
         id: treaty_test

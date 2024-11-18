@@ -3,10 +3,11 @@ import { prismaClient } from "@libs/prismaDatabase";
 
 export default createElysia().get(
   "/",
-  async () => {
-    return {
-      status: 200,
-      data: await prismaClient.portfolio.findMany({
+  async ({ redis }) => {
+    let portfolioData;
+    const redisPortfolioData = await redis.get(`portfolio.all`);
+    if (!redisPortfolioData) {
+      const portfolio = await prismaClient.portfolio.findMany({
         include: {
           stacks: true,
         },
@@ -15,7 +16,15 @@ export default createElysia().get(
             isFeatured: "desc",
           },
         ],
-      }),
+      });
+      portfolioData = portfolio;
+      await redis.set("portfolio.all", JSON.stringify(portfolio), 1440);
+    } else {
+      portfolioData = JSON.parse(redisPortfolioData);
+    }
+    return {
+      status: 200,
+      data: portfolioData,
     };
   },
   {
