@@ -2,7 +2,9 @@ import Elysia, { t } from "elysia";
 
 const blogModel = new Elysia().model({
   "blog.model": t.Object({
-    img: t.String(),
+    img: t.String({
+      format: "uri",
+    }),
     title: t.String(),
     slug: t.String(),
     description: t.String(),

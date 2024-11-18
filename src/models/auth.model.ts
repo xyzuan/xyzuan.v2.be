@@ -2,7 +2,9 @@ import Elysia, { t } from "elysia";
 
 const authModel = new Elysia().model({
   "auth.login": t.Object({
-    email: t.String(),
+    email: t.String({
+      format: "email",
+    }),
     password: t.String(),
   }),
   "auth.signup": t.Object({
