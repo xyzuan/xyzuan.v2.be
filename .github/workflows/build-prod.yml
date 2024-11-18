@@ -143,19 +143,20 @@ jobs:
         run: |
           ssh-keyscan -t rsa ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
           ssh ${{ github.actor }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          echo 'Authenticating to GHCR realms...'
+          echo './nauzyxnet> Authenticating to GHCR realms...'
           echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
 
-          echo 'Pulling the latest image from GHCR...'
+          echo './nauzyxnet> Pulling the latest image from GHCR...'
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
-          echo 'Force Blowing the existing Docker Swarm Service...'
+          echo './nauzyxnet> Force Blowing the existing Docker Swarm Service...'
           docker service rm ${{ env.CT_NAME }}
 
-          echo 'Creating the Docker Swarm Service...'
+          echo './nauzyxnet> Creating the Docker Swarm Service...'
           docker service create \
             --name ${{ env.CT_NAME }} \
             --replicas 6 \
+            --with-registry-auth \
             --restart-condition any \
             --network nginx_swarm \
             -p ${{ env.PORT }}:${{ env.PORT }} \

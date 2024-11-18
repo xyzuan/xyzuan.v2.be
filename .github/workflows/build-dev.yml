@@ -156,6 +156,7 @@ jobs:
           docker service create \
             --name ${{ env.CT_NAME }} \
             --replicas 6 \
+            --with-registry-auth \
             --restart-condition any \
             --network nginx_swarm \
             -p ${{ env.PORT }}:${{ env.PORT }} \
