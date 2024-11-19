@@ -55,8 +55,8 @@ jobs:
   sonarqube:
     name: Run Code Quality Check
     runs-on: self-hosted
-    needs: test
-    if: success()
+    # needs: test
+    # if: success()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
