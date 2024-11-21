@@ -56,7 +56,10 @@ export default createElysia()
             ...sessionCookie.attributes,
           });
 
-          return user;
+          return {
+            status: "200",
+            token: sessionCookie.value,
+          };
         } catch (error) {
           set.status = 500;
         }
