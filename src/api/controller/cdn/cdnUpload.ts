@@ -38,7 +38,12 @@ export default createElysia()
         );
 
         return {
-          data: `File uploaded successfully to ${Bun.env.MINIO_BUCKET_NAME}/${fileName}`,
+          data: {
+            fileName,
+            bucket: Bun.env.MINIO_BUCKET_NAME!,
+            fileSize: body.file.size,
+            metadata,
+          },
           message: "success",
         };
       } catch (error) {
