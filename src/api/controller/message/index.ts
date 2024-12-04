@@ -1,4 +1,4 @@
 import getAllMessage from "./getAllMessage";
 import wsMessage from "./wsMessage";
 
-export { getAllMessage, wsMessage };
+export { wsMessage, getAllMessage };
