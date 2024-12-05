@@ -1,3 +1,4 @@
+import MinioClient from "@libs/minioClient";
 import { fileTypeFromBuffer } from "file-type";
 
 const isMetaDataImg = async (values: ArrayBuffer) => {
@@ -10,4 +11,16 @@ const isMetaDataImg = async (values: ArrayBuffer) => {
   return true;
 };
 
-export { isMetaDataImg };
+const getCDNPublicLink = async (fileName: string) => {
+  return await MinioClient.presignedUrl(
+    "GET",
+    Bun.env.MINIO_BUCKET_NAME!,
+    fileName
+  );
+};
+
+const getCDNObject = async (fileName: string) => {
+  return await MinioClient.getObject(Bun.env.MINIO_BUCKET_NAME!, fileName);
+};
+
+export { isMetaDataImg, getCDNPublicLink, getCDNObject };

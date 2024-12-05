@@ -1,10 +1,9 @@
 import ShortUniqueId from "short-unique-id";
-
 import MinioClient from "@libs/minioClient";
 import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
 import { cdnModel } from "@models/cdn.model";
-import { isMetaDataImg } from "@utils/cdnUtils";
+import { getCDNPublicLink, isMetaDataImg } from "@utils/cdnUtils";
 
 export default createElysia()
   .use(cdnModel)
@@ -40,6 +39,7 @@ export default createElysia()
         return {
           data: {
             fileName,
+            publicLink: await getCDNPublicLink(fileName),
             bucket: Bun.env.MINIO_BUCKET_NAME!,
             fileSize: body.file.size,
             metadata,

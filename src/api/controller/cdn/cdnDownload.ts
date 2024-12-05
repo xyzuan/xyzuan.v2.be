@@ -1,6 +1,6 @@
 import { createElysia } from "@libs/elysia";
-import MinioClient from "@libs/minioClient";
 import { cdnModel } from "@models/cdn.model";
+import { getCDNObject, getCDNPublicLink } from "@utils/cdnUtils";
 import { fileTypeFromBuffer } from "file-type";
 
 export default createElysia()
@@ -8,13 +8,8 @@ export default createElysia()
   .post(
     "/download",
     async ({ body }) => {
-      const stream = await MinioClient.getObject(
-        Bun.env.MINIO_BUCKET_NAME!,
-        body.filename
-      );
-
       const chunks: Buffer[] = [];
-      for await (const chunk of stream) {
+      for await (const chunk of await getCDNObject(body.filename)) {
         chunks.push(chunk);
       }
       const fileBuffer = Buffer.concat(chunks as unknown as Uint8Array[]);
@@ -42,14 +37,8 @@ export default createElysia()
   .post(
     "/download/public",
     async ({ body }) => {
-      const preDesignUrl = await MinioClient.presignedUrl(
-        "GET",
-        Bun.env.MINIO_BUCKET_NAME!,
-        body.filename
-      );
-
       return {
-        data: preDesignUrl,
+        data: getCDNPublicLink(body.filename),
         message: "success",
       };
     },
