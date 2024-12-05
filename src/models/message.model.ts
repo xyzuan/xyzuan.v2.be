@@ -6,7 +6,7 @@ const messageModel = new Elysia().model({
       CREATE: "CREATE",
       DELETE: "DELETE",
     }),
-    message: t.String(),
+    message: t.Optional(t.String()),
     messageId: t.Optional(t.String()),
     messageMentionId: t.Optional(t.String()),
   }),
