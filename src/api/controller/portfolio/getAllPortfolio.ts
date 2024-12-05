@@ -16,6 +16,9 @@ export default createElysia().get(
           {
             isFeatured: "desc",
           },
+          {
+            id: "desc",
+          },
         ],
       });
       portfolioData = portfolio;

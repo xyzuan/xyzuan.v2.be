@@ -31,6 +31,7 @@ export default createElysia()
       });
 
       await redis.del(`portfolio.${id}`);
+      await redis.del(`portfolio.all`);
 
       return {
         status: 200,
