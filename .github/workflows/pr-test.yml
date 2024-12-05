@@ -34,6 +34,10 @@ jobs:
           echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> $GITHUB_ENV
           echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> $GITHUB_ENV
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
+          echo "MINIO_HOST=${{ secrets.MINIO_HOST }}" >> $GITHUB_ENV
+          echo "MINIO_BUCKET_NAME=${{ secrets.MINIO_BUCKET_NAME }}" >> $GITHUB_ENV
+          echo "MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}" >> $GITHUB_ENV
           echo "AZURE_AI_URL=${{ secrets.AZURE_AI_URL }}" >> $GITHUB_ENV
           echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
           echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
