@@ -141,7 +141,7 @@ model Portfolio {
   content     String?          @db.Text
   href        String?
   projectLink String?
-  date        DateTime
+  date        DateTime         
   isFeatured  Boolean          @default(false)
   stacks      PortfolioStack[]
   createdAt   DateTime         @default(now())
