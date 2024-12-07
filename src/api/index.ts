@@ -12,6 +12,7 @@ import {
   getBlog,
   getBlogBySlug,
   reactionBlog,
+  updateBlog,
 } from "./controller/blog";
 import {
   getCurrentUser,
@@ -70,6 +71,7 @@ const apiRoutes = createElysia({ prefix: "v2/" })
       .use(getBlog)
       .use(getBlogBySlug)
       .use(createBlog)
+      .use(updateBlog)
       .use(commentBlog)
       .use(reactionBlog)
   )
