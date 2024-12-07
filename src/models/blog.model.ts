@@ -25,6 +25,19 @@ const blogModel = new Elysia().model({
       ANGRY: "ANGRY",
     }),
   }),
+  "blog.patch.model": t.Object({
+    img: t.Optional(
+      t.String({
+        format: "uri",
+      })
+    ),
+    title: t.Optional(t.String()),
+    slug: t.Optional(t.String()),
+    description: t.Optional(t.String()),
+    content: t.Optional(t.String()),
+    tags: t.Optional(t.String()),
+    createdAt: t.Optional(t.Date()),
+  }),
 });
 
 export default blogModel;

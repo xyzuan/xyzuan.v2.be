@@ -2,6 +2,7 @@ import { ForbiddenException } from "@constants/exceptions";
 import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
+import { redis } from "@libs/redisClient";
 import portfolioModel from "@models/portfolio.model";
 
 export default createElysia()
@@ -28,13 +29,17 @@ export default createElysia()
           stacks: true,
         },
       });
+
+      await redis.del(`portfolio.${id}`);
+      await redis.del(`portfolio.all`);
+
       return {
         status: 200,
         message: `Portfolio and related stacks updated successfully`,
       };
     },
     {
-      body: "portfolio.model",
+      body: "portfolio.patch.model",
       detail: {
         tags: ["Portfolios"],
       },

@@ -12,6 +12,7 @@ import {
   getBlog,
   getBlogBySlug,
   reactionBlog,
+  updateBlog,
 } from "./controller/blog";
 import {
   getCurrentUser,
@@ -39,6 +40,7 @@ import {
   getWorkById,
   updateWork,
 } from "./controller/work";
+import { cdnDownload, cdnUpload } from "./controller/cdn";
 
 const apiRoutes = createElysia({ prefix: "v2/" })
   .group("auth", (api) =>
@@ -69,10 +71,12 @@ const apiRoutes = createElysia({ prefix: "v2/" })
       .use(getBlog)
       .use(getBlogBySlug)
       .use(createBlog)
+      .use(updateBlog)
       .use(commentBlog)
       .use(reactionBlog)
   )
   .group("assets", (api) => api.use(cloudinaryUpload))
+  .group("cdn", (api) => api.use(cdnUpload).use(cdnDownload))
   .group("ai", (api) =>
     api.use(getAIChatById).use(getCurrentAIChat).use(requestAIChat)
   );
