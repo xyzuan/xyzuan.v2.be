@@ -4,11 +4,17 @@ import { BadRequestException } from "@constants/exceptions";
 import { rateLimit } from "elysia-rate-limit";
 import { createElysia } from "@libs/elysia";
 import blogModel from "@models/blog.model";
+import { redis } from "@libs/redisClient";
 
 export default createElysia()
   .use(blogModel)
   .use(authGuard)
-  .use(rateLimit())
+  .use(
+    rateLimit({
+      max: 3,
+      duration: 60000,
+    })
+  )
   .post(
     "/comment/:id",
     async ({ body, params: { id }, user }) => {
@@ -20,6 +26,8 @@ export default createElysia()
       if (!blog) {
         throw new BadRequestException("Blog not found.");
       }
+
+      await redis.del(`blog.${blog.slug}`);
 
       return {
         status: 200,

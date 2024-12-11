@@ -3,6 +3,7 @@ import { prismaClient } from "@libs/prismaDatabase";
 import { BadRequestException } from "@constants/exceptions";
 import { createElysia } from "@libs/elysia";
 import blogModel from "@models/blog.model";
+import { redis } from "@libs/redisClient";
 
 export default createElysia()
   .use(blogModel)
@@ -19,6 +20,8 @@ export default createElysia()
       if (!blog) {
         throw new BadRequestException("Blog not found.");
       }
+
+      await redis.del(`blog.${blog.slug}`);
 
       const existingReaction = await prismaClient.blogReaction.findFirst({
         where: {

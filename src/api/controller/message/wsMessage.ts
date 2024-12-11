@@ -1,3 +1,5 @@
+import { rateLimit } from "elysia-rate-limit";
+
 import { UnauthorizedException } from "@constants/exceptions";
 import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
@@ -6,6 +8,12 @@ import messageModel from "@models/message.model";
 
 export default createElysia()
   .use(messageModel)
+  .use(
+    rateLimit({
+      max: 10,
+      duration: 60000,
+    })
+  )
   .use(authGuard)
   .ws("/", {
     body: "message.model",
