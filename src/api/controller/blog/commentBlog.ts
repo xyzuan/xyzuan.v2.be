@@ -8,7 +8,12 @@ import blogModel from "@models/blog.model";
 export default createElysia()
   .use(blogModel)
   .use(authGuard)
-  .use(rateLimit())
+  .use(
+    rateLimit({
+      max: 3,
+      duration: 60000,
+    })
+  )
   .post(
     "/comment/:id",
     async ({ body, params: { id }, user }) => {
