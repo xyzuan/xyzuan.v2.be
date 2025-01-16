@@ -17,7 +17,7 @@
     "cloudinary": "^2.5.1",
     "elysia-ip": "^1.0.7",
     "elysia-rate-limit": "^4.1.0",
-    "file-type": "^19.6.0",
+    "file-type": "^20.0.0",
     "logestic": "^1.2.4",
     "lucia": "^3.2.0",
     "minio": "^8.0.2",
