@@ -65,7 +65,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: "Check code with SonarQube"
-        uses: sonarsource/sonarqube-scan-action@v4
+        uses: sonarsource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
