@@ -7,7 +7,7 @@ import { initializeRedisClient } from "@libs/redisClient";
 export const api = baseElysia()
   .use(
     cors({
-      origin: ["xyzuan.my.id", "localhost:3000", "localhost"],
+      origin: ["xyzuan.my.id", "xyzuan.com", "localhost:3000", "localhost"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   )

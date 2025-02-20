@@ -40,6 +40,7 @@ const authGuard = new Elysia({
           !verifyRequestOrigin(origin, [
             "http://xyzuan.my.id",
             "xyzuan.my.id",
+            "xyzuan.com",
             "http://dev.xyzuan.my.id",
             "dev.xyzuan.my.id",
             "http://api.xyzuan.my.id",
