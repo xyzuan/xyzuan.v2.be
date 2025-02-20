@@ -101,8 +101,8 @@ jobs:
           echo "SHA=$(echo "$GITHUB_SHA" | head -c 7)" >> $GITHUB_ENV
           echo "ENV=production" >> $GITHUB_ENV
           echo "PORT=3131" >> $GITHUB_ENV
-          echo "BASE_URL=https://api.xyzuan.my.id" >> $GITHUB_ENV
-          echo "DOMAIN=xyzuan.my.id" >> $GITHUB_ENV
+          echo "BASE_URL=https://api.xyzuan.com" >> $GITHUB_ENV
+          echo "DOMAIN=xyzuan.com" >> $GITHUB_ENV
           echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
           echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
           echo "DOCKERFILE=misc/Dockerfile" >> $GITHUB_ENV
