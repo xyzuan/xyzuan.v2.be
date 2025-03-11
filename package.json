@@ -12,7 +12,7 @@
     "@elysiajs/opentelemetry": "^1.1.7",
     "@elysiajs/swagger": "^1.1.1",
     "@lucia-auth/adapter-prisma": "^4.0.1",
-    "@prisma/client": "5.19.1",
+    "@prisma/client": "6.5.0",
     "arctic": "^2.0.0",
     "cloudinary": "^2.5.1",
     "elysia-ip": "^1.0.7",
