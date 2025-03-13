@@ -2,6 +2,7 @@ import { createClient, RedisClientType } from "redis";
 
 const RedisClientConfig: RedisClientType = createClient({
   url: Bun.env.REDIS_URL,
+  password: Bun.env.REDIS_PASSWORD,
 });
 
 export async function initializeRedisClient(): Promise<RedisClientType> {

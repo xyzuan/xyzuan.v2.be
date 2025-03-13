@@ -43,6 +43,7 @@ jobs:
           echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
           echo "AXIOM_DATASET=${{ secrets.AXIOM_DATASET }}" >> $GITHUB_ENV
           echo "REDIS_URL=${{ secrets.REDIS_URL_DEV }}" >> $GITHUB_ENV
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Run Treaty Tests
         id: treaty_test
@@ -144,6 +145,7 @@ jobs:
           --build-arg AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }} \
           --build-arg AXIOM_DATASET=${{ secrets.AXIOM_DATASET }} \
           --build-arg REDIS_URL=${{ secrets.REDIS_URL_DEV_INTERNAL }} \
+          --build-arg REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images

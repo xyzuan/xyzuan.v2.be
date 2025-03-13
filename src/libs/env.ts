@@ -21,6 +21,7 @@ const envValidateScheme = z.object({
   AXIOM_SECRET_TOKEN: z.string(),
   AXIOM_DATASET: z.string(),
   REDIS_URL: z.string(),
+  REDIS_PASSWORD: z.string(),
 });
 
 const env = () => {
