@@ -24,7 +24,7 @@
     "node-telegram-bot-api": "^0.66.0",
     "redis": "^4.7.0",
     "short-unique-id": "^5.2.0",
-    "zod": "^3.23.8"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@types/node-telegram-bot-api": "^0.64.7",
