@@ -96,6 +96,11 @@ jobs:
     needs: build
     if: success()
     steps:
+      - name: Connect to Twingate
+        uses: twingate/github-action@v1
+        with:
+          service-key: ${{ secrets.TWINGATE_SERVICE_KEY }}
+
       - name: Authenticating to Eden Server realms
         uses: webfactory/ssh-agent@v0.9.0
         with:
