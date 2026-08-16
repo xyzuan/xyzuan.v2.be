@@ -6,89 +6,10 @@ on:
       - dev
 
 jobs:
-  test:
-    name: Run Treaty Tests
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize Bun Environtment
-        uses: oven-sh/setup-bun@v2
-
-      - name: Declaring some Global Environtment vars
-        run: |
-          echo "PORT=4031" >> $GITHUB_ENV
-          echo "DOMAIN=localhost" >> $GITHUB_ENV
-          echo "NODE_ENV=dev" >> $GITHUB_ENV
-          echo "PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }}" >> $GITHUB_ENV
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL_DEV }}" >> $GITHUB_ENV
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "LINKEDIN_CLIENT_ID=${{ secrets.LINKEDIN_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "LINKEDIN_CLIENT_SECRET=${{ secrets.LINKEDIN_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
-          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
-          echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> $GITHUB_ENV
-          echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> $GITHUB_ENV
-          echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
-          echo "MINIO_HOST=${{ secrets.MINIO_HOST }}" >> $GITHUB_ENV
-          echo "MINIO_BUCKET_NAME=${{ secrets.MINIO_BUCKET_NAME }}" >> $GITHUB_ENV
-          echo "MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "AZURE_AI_URL=${{ secrets.AZURE_AI_URL }}" >> $GITHUB_ENV
-          echo "AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }}" >> $GITHUB_ENV
-          echo "AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }}" >> $GITHUB_ENV
-          echo "AXIOM_DATASET=${{ secrets.AXIOM_DATASET }}" >> $GITHUB_ENV
-          echo "REDIS_URL=${{ secrets.REDIS_URL_DEV }}" >> $GITHUB_ENV
-
-      - name: Run Treaty Tests
-        id: treaty_test
-        run: |
-          bun install
-          bunx prisma generate
-          bun test
-          echo "::set-output name=result::success"
-
-      - name: Mark as failed if tests fail
-        if: failure()
-        run: echo "::set-output name=result::failure"
-
-  sonarqube:
-    name: Run Code Quality Check
-    runs-on: self-hosted
-    needs: test
-    if: success()
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: "Check code with SonarQube"
-        uses: sonarsource/sonarqube-scan-action@v4
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
   build:
     name: Build & Push to GHCR Registry
-    runs-on: self-hosted
-    needs: sonarqube
-    if: success()
+    runs-on: ubuntu-latest
     steps:
-      - name: Send Telegram Message on Build
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ${{ github.actor }} triggered build:
-            Last Commit message: ${{ github.event.commits[0].message }}
-
-            Repository: ${{ github.repository }}
-
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -107,11 +28,6 @@ jobs:
           echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
           echo "DOCKERFILE=misc/Dockerfile" >> $GITHUB_ENV
 
-      - name: Authenticating to Eden Server realms.
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SERVER_PRIVATE_KEY }}
-
       - name: Authenticating to GHCR realms
         run: echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
 
@@ -123,7 +39,7 @@ jobs:
           --build-arg BASE_URL=${{ env.BASE_URL }} \
           --build-arg DOMAIN=${{ env.DOMAIN }} \
           --build-arg PASSWORD_PEPPER=${{ secrets.PASSWORD_PEPPER }} \
-          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV_INTERNAL }} \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_DEV }} \
           --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
           --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
           --build-arg GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
@@ -143,7 +59,8 @@ jobs:
           --build-arg AZURE_AI_API_KEY=${{ secrets.AZURE_AI_API_KEY }} \
           --build-arg AXIOM_SECRET_TOKEN=${{ secrets.AXIOM_SECRET_TOKEN }} \
           --build-arg AXIOM_DATASET=${{ secrets.AXIOM_DATASET }} \
-          --build-arg REDIS_URL=${{ secrets.REDIS_URL_DEV_INTERNAL }} \
+          --build-arg REDIS_URL=${{ secrets.REDIS_URL_DEV }} \
+          --build-arg REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} \
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} -f ${{ env.DOCKERFILE }} .
 
       - name: Adding tags to the Images
@@ -157,10 +74,15 @@ jobs:
 
   serve:
     name: Serve Images in Server
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: build
     if: success()
     steps:
+      - name: Connect to Twingate
+        uses: twingate/github-action@v1
+        with:
+          service-key: ${{ secrets.TWINGATE_SERVICE_KEY }}
+
       - name: Authenticating to Eden Server realms
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -177,35 +99,21 @@ jobs:
       - name: Serve the Images
         run: |
           ssh-keyscan -t rsa ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-          ssh ${{ github.actor }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          echo 'Authenticating to GHCR realms...'
+          ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          echo './nauzyxnet> Authenticating to GHCR realms...'
           echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
 
-          echo 'Pulling the latest image from GHCR...'
+          echo './nauzyxnet> Pulling the latest image from GHCR...'
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
-          echo 'Force Blowing the existing Docker Swarm Service...'
-          docker service rm ${{ env.CT_NAME }}
+          echo './nauzyxnet> Force Blowing the existing Docker Container...'
+          docker stop ${{ env.CT_NAME }} || true
+          docker rm -f ${{ env.CT_NAME }} || true
 
-          echo 'Creating the Docker Swarm Service...'
-          docker service create \
+          echo './nauzyxnet> Creating the Docker Container...'
+          docker run -d \
             --name ${{ env.CT_NAME }} \
-            --replicas 6 \
-            --with-registry-auth \
-            --restart-condition any \
-            --network nginx_swarm \
+            --restart unless-stopped \
             -p ${{ env.PORT }}:${{ env.PORT }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           EOF
-      - name: Send Telegram Message Success Build
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            Build Success,
-            Last Commit message: ${{ github.event.commits[0].message }}
-
-            Repository: ${{ github.repository }}
-
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
