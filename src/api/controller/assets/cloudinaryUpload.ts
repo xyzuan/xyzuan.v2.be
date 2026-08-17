@@ -10,6 +10,7 @@ export default createElysia()
     "/upload",
     async ({ body }) => {
       const secureUrl = await cloudinary.uploader.upload(body.image, {
+        folder: "collections",
         transformation: [{ fetch_format: "auto" }],
       });
       return {
