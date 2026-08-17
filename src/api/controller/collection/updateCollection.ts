@@ -2,7 +2,6 @@ import { ForbiddenException } from "@constants/exceptions";
 import { authGuard } from "@libs/authGuard";
 import { createElysia } from "@libs/elysia";
 import { prismaClient } from "@libs/prismaDatabase";
-import { redis } from "@libs/redisClient";
 import collectionModel from "@models/collection.model";
 
 export default createElysia()
@@ -25,9 +24,6 @@ export default createElysia()
         where: { id: parseInt(id) },
         data: { ...body },
       });
-
-      await redis.del(`collection.${id}`);
-      await redis.del("collection.all");
 
       return {
         status: 200,
