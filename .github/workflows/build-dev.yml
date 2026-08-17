@@ -10,19 +10,6 @@ jobs:
     name: Build & Push to GHCR Registry
     runs-on: ubuntu-latest
     steps:
-      - name: Send Telegram Message on Build
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ${{ github.actor }} triggered build:
-            Last Commit message: ${{ github.event.commits[0].message }}
-
-            Repository: ${{ github.repository }}
-
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -40,11 +27,6 @@ jobs:
           echo "REGISTRY=ghcr.io/xyzuan" >> $GITHUB_ENV
           echo "IMAGE_NAME=xyzuan_api_v2" >> $GITHUB_ENV
           echo "DOCKERFILE=misc/Dockerfile" >> $GITHUB_ENV
-
-      - name: Authenticating to Eden Server realms.
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SERVER_PRIVATE_KEY }}
 
       - name: Authenticating to GHCR realms
         run: echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
@@ -118,10 +100,10 @@ jobs:
         run: |
           ssh-keyscan -t rsa ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
           ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          echo 'Authenticating to GHCR realms...'
+          echo './nauzyxnet> Authenticating to GHCR realms...'
           echo "${{ secrets.GH_TOKEN }}" | docker login -u "${{ github.actor }}" ghcr.io --password-stdin
 
-          echo 'Pulling the latest image from GHCR...'
+          echo './nauzyxnet> Pulling the latest image from GHCR...'
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
           echo './nauzyxnet> Force Blowing the existing Docker Container...'

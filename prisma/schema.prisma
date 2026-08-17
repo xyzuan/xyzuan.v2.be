@@ -179,3 +179,30 @@ model WorkResponsibility {
   workId      Int
   work        Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
 }
+
+enum CollectionStore {
+  SHOPEE
+  TOKOPEDIA
+}
+
+enum CollectionCategory {
+  GADGETS
+  BOOKS
+  TOOLS
+  WORKSPACE
+  SOFTWARE
+}
+
+model Collection {
+  id            Int                 @id @default(autoincrement())
+  image         String
+  title         String
+  description   String
+  affiliateLink String
+  price         Int
+  storeName     CollectionStore
+  category      CollectionCategory
+  isFeatured    Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}

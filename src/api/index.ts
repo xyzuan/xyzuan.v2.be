@@ -29,6 +29,12 @@ import {
   updatePortfolio,
 } from "./controller/portfolio";
 import {
+  createCollection,
+  getAllCollection,
+  getCollectionById,
+  updateCollection,
+} from "./controller/collection";
+import {
   getAIChatById,
   getCurrentAIChat,
   requestAIChat,
@@ -65,6 +71,13 @@ const apiRoutes = createElysia({ prefix: "v2/" })
       .use(updatePortfolio)
       .use(createPortfolio)
       .use(deletePortfolio)
+  )
+  .group("collection", (api) =>
+    api
+      .use(getAllCollection)
+      .use(getCollectionById)
+      .use(updateCollection)
+      .use(createCollection)
   )
   .group("blog", (api) =>
     api
