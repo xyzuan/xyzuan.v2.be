@@ -197,7 +197,6 @@ model Collection {
   id            Int                 @id @default(autoincrement())
   image         String
   title         String
-  description   String
   affiliateLink String
   storeName     CollectionStore
   category      CollectionCategory

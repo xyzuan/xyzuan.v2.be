@@ -4,7 +4,6 @@ const collectionModel = new Elysia().model({
   "collection.model": t.Object({
     image: t.String({ format: "uri" }),
     title: t.String(),
-    description: t.String(),
     affiliateLink: t.String({ format: "uri" }),
     storeName: t.Enum({
       SHOPEE: "SHOPEE",
