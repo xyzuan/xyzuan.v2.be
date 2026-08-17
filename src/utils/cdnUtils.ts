@@ -12,6 +12,11 @@ const isMetaDataImg = async (values: ArrayBuffer) => {
 };
 
 const getCDNPublicLink = async (fileName: string) => {
+  const publicUrl = Bun.env.MINIO_PUBLIC_URL;
+  if (publicUrl) {
+    return `${publicUrl.replace(/\/+$/, "")}/${Bun.env.MINIO_BUCKET_NAME}/${fileName}`;
+  }
+  // Fallback to presigned URL if MINIO_PUBLIC_URL is not set
   return await MinioClient.presignedUrl(
     "GET",
     Bun.env.MINIO_BUCKET_NAME!,
