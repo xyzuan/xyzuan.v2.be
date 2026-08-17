@@ -30,6 +30,7 @@ import {
 } from "./controller/portfolio";
 import {
   createCollection,
+  deleteCollection,
   getAllCollection,
   getCollectionById,
   updateCollection,
@@ -78,6 +79,7 @@ const apiRoutes = createElysia({ prefix: "v2/" })
       .use(getCollectionById)
       .use(updateCollection)
       .use(createCollection)
+      .use(deleteCollection)
   )
   .group("blog", (api) =>
     api
