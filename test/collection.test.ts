@@ -27,7 +27,6 @@ describe("Collection Modules", () => {
     expect(response.data).toHaveProperty("title");
     expect(response.data).toHaveProperty("storeName");
     expect(response.data).toHaveProperty("category");
-    expect(response.data).toHaveProperty("price");
   });
 
   it("Return 404 envelope for a missing collection id", async () => {
@@ -55,7 +54,6 @@ describe("Collection Modules", () => {
             title: "Test",
             description: "desc",
             affiliateLink: "https://shopee.co.id/test",
-            price: 1000,
             storeName: "SHOPEE",
             category: "GADGETS",
             isFeatured: false,

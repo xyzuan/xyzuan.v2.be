@@ -6,7 +6,6 @@ const collectionModel = new Elysia().model({
     title: t.String(),
     description: t.String(),
     affiliateLink: t.String({ format: "uri" }),
-    price: t.Integer({ minimum: 0 }),
     storeName: t.Enum({
       SHOPEE: "SHOPEE",
       TOKOPEDIA: "TOKOPEDIA",
