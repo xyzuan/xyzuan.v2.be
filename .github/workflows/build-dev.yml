@@ -84,7 +84,7 @@ jobs:
           service-key: ${{ secrets.TWINGATE_SERVICE_KEY }}
 
       - name: Authenticating to Eden Server realms
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.SERVER_PRIVATE_KEY }}
 
