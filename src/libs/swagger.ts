@@ -20,6 +20,10 @@ export const docs = swagger({
         description: "Jody Yuantoro portofolios endpoints",
       },
       { name: "Works", description: "Jody Yuantoro works endpoints" },
+      {
+        name: "Health",
+        description: "Service health, version, and dependency status",
+      },
     ],
   },
 });

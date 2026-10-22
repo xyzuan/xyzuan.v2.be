@@ -48,6 +48,7 @@ import {
   updateWork,
 } from "./controller/work";
 import { cdnDownload, cdnUpload } from "./controller/cdn";
+import { getHealth } from "./controller/health";
 
 const apiRoutes = createElysia({ prefix: "v2/" })
   .group("auth", (api) =>
@@ -94,6 +95,7 @@ const apiRoutes = createElysia({ prefix: "v2/" })
   .group("cdn", (api) => api.use(cdnUpload).use(cdnDownload))
   .group("ai", (api) =>
     api.use(getAIChatById).use(getCurrentAIChat).use(requestAIChat)
-  );
+  )
+  .group("health", (api) => api.use(getHealth));
 
 export default apiRoutes;
