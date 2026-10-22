@@ -23,7 +23,7 @@
     "minio": "^8.0.7",
     "redis": "^4.7.0",
     "short-unique-id": "^5.2.0",
-    "zod": "^3.23.8"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "bun-types": "latest",
